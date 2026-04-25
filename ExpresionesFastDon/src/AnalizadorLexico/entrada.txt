@@ -1,0 +1,25 @@
+// Clase principal para probar el analizador léxico
+public class Analizador {
+
+    // Método main: punto de entrada del programa
+    main(String[] args) {
+        
+        // Declaración de variables enteras
+        int suma = 0;        // Acumulador de la suma
+        int i;               // Variable de control del bucle
+
+        // Bucle for: recorre valores de 0 a 9
+        for (i = 0; i < 10; i++) {
+            
+            // Condicional if: verifica si el número es par
+            if (i % 2 == 0) {
+                
+                // Operación aritmética: suma acumulada
+                suma = suma + i;
+            }
+        }
+
+        // Salida por consola: muestra el resultado final
+        print("La suma de los pares es: " + suma);
+    }
+}
