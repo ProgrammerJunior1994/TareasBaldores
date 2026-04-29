@@ -1,20 +1,26 @@
 // Clase principal para probar el analizador lÃ©xico
 public class Analizador {
 
-    // MÃ©todo main: punto de entrada del programa
+    // Método main: punto de entrada del programa
     main(String[] args) {
+        // Declaración de una variable booleana
+        boolean asiste;         // Variable booleana sin valor
+        boolean     acceso = true;  // Variable para el control de acceso
         
-        // DeclaraciÃ³n de variables enteras
-        int suma = 0;        // Acumulador de la suma
+
+
+        // Declaración de variables enteras
+        int suma = 0   ;        // Acumulador de la suma
+        int  = 0   ;        // Acumulador de la suma
         int i;               // Variable de control del bucle
 
         // Bucle for: recorre valores de 0 a 9
         for (i = 0; i < 10; i++) {
             
-            // Condicional if: verifica si el nÃºmero es par
+            // Condicional if: verifica si el número es par
             if (i % 2 == 0) {
                 
-                // OperaciÃ³n aritmÃ©tica: suma acumulada
+                // Operación aritmÃ©tica: suma acumulada
                 suma = suma + i;
             }
         }

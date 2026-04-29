@@ -10,11 +10,11 @@ package AnalizadorLexico;
  */
 public class TABSIM {
     String var;
+    String tipo;
     String valor;
-    int tipo;
     int id;
 
-    public TABSIM(String var, String valor, int tipo, int id) {
+    public TABSIM(String var, String valor, String tipo, int id) {
         this.var = var;
         this.valor = valor;
         this.tipo = tipo;
@@ -37,11 +37,11 @@ public class TABSIM {
         this.valor = valor;
     }
 
-    public int getTipo() {
+    public String getTipo() {
         return tipo;
     }
 
-    public void setTipo(int tipo) {
+    public void setTipo(String tipo) {
         this.tipo = tipo;
     }
 

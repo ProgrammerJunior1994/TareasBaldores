@@ -1,12 +1,15 @@
 public class Analizador {
-main( String[] args ) {
-int suma = 0;
-int i;
-for ( i = 0; i < 10; i++ ) {
+main ( String[] args ) {
+boolean asiste ;
+boolean acceso = true ;
+int suma = 0 ;
+int = 0 ;
+int i ;
+for ( i = 0 ; i < 10 ; i++ ) {
 if ( i % 2 == 0 ) {
-suma = suma + i;
+suma = suma + i ;
 }
 }
-print( "La suma de los pares es: " + suma );
+print ( " La suma de los pares es : " + suma ) ;
 }
 }
