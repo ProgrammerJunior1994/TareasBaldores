@@ -14,6 +14,10 @@ public class Analizador {
         int  = 0   ;        // Acumulador de la suma
         int i;               // Variable de control del bucle
 
+        String nombre;      // Variable nombre de tipo String (cadena de caracteres)
+        String escuela = "tsj"; // Variable escuela de tipo String (cadena de caracteres)
+
+
         // Bucle for: recorre valores de 0 a 9
         for (i = 0; i < 10; i++) {
             
