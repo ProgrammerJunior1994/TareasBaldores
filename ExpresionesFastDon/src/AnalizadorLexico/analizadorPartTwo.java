@@ -12,12 +12,26 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 /**
  *
  * @author br340
  */
 public class analizadorPartTwo {
+
+//    static TABSIM[] reservadas = {
+//        new TABSIM("int", "int", "0", 0),
+//        new TABSIM("String", "String", "0", 1),
+//        new TABSIM("boolean", "boolean", "0", 2),
+//        new TABSIM("main", "main", "0", 3),
+//        new TABSIM("if", "if", "0", 4),
+//        new TABSIM("else", "else", "0", 5),
+//        new TABSIM("for", "for", "0", 6),
+//        new TABSIM("whie", "while", "0", 7)
+//
+//    };
+    static ArrayList<TABSIM> reservadas = new ArrayList<>();
 
     public static void limpiarArvhivo() {
         try (
@@ -54,6 +68,10 @@ public class analizadorPartTwo {
             texto = texto.replaceAll("\\:", " :"); // Agregar un espacio antes de un dos puntos
             texto = texto.replaceAll("\"", "\" "); // Agregar un espacio después de una comillas dobles
             texto = texto.replaceAll("\"", " \""); // Agregar un espacio antes de una comillas dobles
+            texto = texto.replaceAll("\\[", " \\["); // Agregar un espacio antes de un inicio de corchete
+            texto = texto.replaceAll("\\[", "\\[ "); // Agregar un espacio después de un inicio de corchete
+            texto = texto.replaceAll("\\]", "\\] "); // Agregar un espacio después de un cierre de corchete
+            texto = texto.replaceAll("\\]", " \\]"); // Agregar un espacio antes de un cierre de corchete
 
             // Quitar tabulaciones
             texto = texto.replaceAll("\\t", " ");
@@ -84,29 +102,23 @@ public class analizadorPartTwo {
     }
 
     public static void main(String[] args) {
+//        reservadas.add(new TABSIM("int", "int", "0", 0));
+//        reservadas.add(new TABSIM("String", "String", "0", 1));
+//        reservadas.add(new TABSIM("boolean", "boolean", "0", 2));
+        reservadas.add(new TABSIM("main", "main", "0", 3));
+        reservadas.add(new TABSIM("if", "if", "0", 4));
+        reservadas.add(new TABSIM("else", "else", "0", 5));
+        reservadas.add(new TABSIM("for", "for", "0", 6));
+        reservadas.add(new TABSIM("whie", "while", "0", 7));
+
         // Declaración de elementos del TABSIM
 //        TABSIM entero = new TABSIM("int", "int", "0", 0);
 //        TABSIM cadena = new TABSIM("String", "String", "0", 1); //Primera prueba para la creación de elementos del TABSIM (buena idea pero puede ser mejor)
 //        TABSIM booleano = new TABSIM("boolean", "boolean", "0", 2);
-
         // Creación de elementos en el TABSIM
-        TABSIM[] reservadas = {
-            new TABSIM("int", "int", "0", 0),
-            new TABSIM("String", "String", "0", 1),
-            new TABSIM("boolean", "boolean", "0", 2),
-            new TABSIM("main", "main", "0", 3),
-            new TABSIM("if", "if", "0", 4),
-            new TABSIM("else", "else", "0", 5),
-            new TABSIM("for", "for", "0", 6),
-            new TABSIM("whie", "while", "0", 7),
-            new TABSIM("else", "else", "0", 8),
-            new TABSIM("else", "else", "0", 9)
-
-        };
-
-        System.out.println(reservadas[0].var);
-        System.out.println(reservadas[1].var);
-        System.out.println(reservadas[2].var);
+//        System.out.println(reservadas.get(0).var);
+//        System.out.println(reservadas.get(1).var);
+//        System.out.println(reservadas.get(2).var);
         analizadorPartTwo.limpiarArvhivo();
 //        System.out.println(System.getProperty("user.dir"));
         System.out.println("Bienvenidos a mi programa, ¿Cómo están?"); // Impresión para probar acentos en consola
@@ -124,7 +136,7 @@ public class analizadorPartTwo {
                         System.out.println(t);  // for para mostrar los tokens (opcional mostrarlos, solo se muestran para pruebas)
                         switch (t) {
                             case "int":
-                                validarLexemaEntero(linea, t);
+                                validarLexemaInt(linea, t);
 //                                String varentera = "^\\s*int\\s+[a-zA-Z_][a-zA-Z0-9_]*(\\s*=\\s*-?\\d+)?\\s*;\\s*$";
 //                                if (linea.matches(varentera)) {
 //                                    // El lexema es válido
@@ -135,8 +147,12 @@ public class analizadorPartTwo {
 //                                    System.out.println("Declaracion invalida.");
 //                                }
                                 break;
-                            default:
-
+                            case "String":
+                                validarLexemaString(linea, t);
+                                break;
+                            case "boolean":
+                                validarLexemaBoolean(linea, t);
+                                break;
                         }
 //                        if(t.equals("int")){
 //                            String varentera = "^\\s*int\\s+[a-zA-Z_][a-zA-Z0-9_]*(\\s*=\\s*-?\\d+)?\\s*;\\s*$";
@@ -154,34 +170,98 @@ public class analizadorPartTwo {
         }
     }
 
-    static void validarLexemaEntero(String l, String t) {
-        TABSIM[] reservadas = {
-            new TABSIM("int", "int", "0", 0),
-            new TABSIM("String", "String", "0", 1),
-            new TABSIM("boolean", "boolean", "0", 2),
-            new TABSIM("main", "main", "0", 3),
-            new TABSIM("if", "if", "0", 4),
-            new TABSIM("else", "else", "0", 5),
-            new TABSIM("for", "for", "0", 6),
-            new TABSIM("whie", "while", "0", 7),
-            new TABSIM("else", "else", "0", 8),
-            new TABSIM("else", "else", "0", 9)
-
-        };
+    static void validarLexemaInt(String l, String t) {
+        boolean existe = false;
+//        TABSIM[] reservadas = {
+//            new TABSIM("int", "int", "0", 0),
+//            new TABSIM("String", "String", "0", 1),
+//            new TABSIM("boolean", "boolean", "0", 2),
+//            new TABSIM("main", "main", "0", 3),  // Ya no hay necesidad de declararlo en cada función
+//            new TABSIM("if", "if", "0", 4),
+//            new TABSIM("else", "else", "0", 5),
+//            new TABSIM("for", "for", "0", 6),
+//            new TABSIM("whie", "while", "0", 7)
+//
+//        };
 
         String varentera = "^\\s*int\\s+[a-zA-Z_][a-zA-Z0-9_]*(\\s*=\\s*-?\\d+)?\\s*;\\s*$";
         if (l.matches(varentera)) {
             // El lexema es válido
-            for (int i = 0; i < reservadas.length; i++) {
-                if (t.equals(reservadas[i].var)) {
-                    // Si existe en el TABSIM, hace nada...
-                    System.out.println("TOKEN YA DECLARADO EN EL TABSIM!!");
-                } else {
-                    System.out.println("TOKEN NO DECLARADO EN EL TABSIM");
+            for (int i = 0; i < reservadas.size(); i++) {
+                if (t.equals(reservadas.get(i).var)) {
+                    existe = true;
+                    break;
                 }
+            }
+            if (existe) {
+                System.out.println("VARIABLE YA DECLARADA EN EL TABSIM");
+            } else {
+                reservadas.add(new TABSIM(t, t, "0", reservadas.size()));
+                System.out.println("TOKEN AÑADIDO AL TABSIM");
             }
         } else {
             System.out.println("Error en la linea []");
         }
     }
+
+    static void validarLexemaString(String l, String t) {
+        boolean existe = false;
+        String varcadena = "^\\s*String\\s+[a-zA-Z_][a-zA-Z0-9_]*(\\s*=\\s*\"[^\"]*\")?\\s*;\\s*$";
+        if (l.matches(varcadena)) {
+            // El lexema es válido
+            for (int i = 0; i < reservadas.size(); i++) {
+                if (t.equals(reservadas.get(i).var)) {
+                    existe = true;
+                    break;
+                }
+            }
+            if (existe) {
+                System.out.println("VARIABLE YA DECLARADA EN EL TABSIM");
+            } else {
+                reservadas.add(new TABSIM(t, t, "0", reservadas.size()));
+                System.out.println("TOKEN AÑADIDO AL TABSIM");
+            }
+        } else {
+            System.out.println("Error en la linea []");
+        }
+    }
+
+    static void validarLexemaBoolean(String l, String t) {
+        boolean existe = false;
+        String varboolean = "^\\s*boolean\\s+[a-zA-Z_][a-zA-Z0-9_]*(\\s*=\\s*(true|false))?\\s*;\\s*$";
+        if (l.matches(varboolean)) {
+            // El lexema es válido
+            for (int i = 0; i < reservadas.size(); i++) {
+                if (t.equals(reservadas.get(i).var)) {
+                    existe = true;
+                    break;
+                }
+            }
+            if (existe) {
+                System.out.println("VARIABLE YA DECLARADA EN EL TABSIM");
+            } else {
+                reservadas.add(new TABSIM(t, t, "0", reservadas.size()));
+                System.out.println("TOKEN AÑADIDO AL TABSIM");
+            }
+        } else {
+            System.out.println("Error en la linea []");
+        }
+    }
+
+//    static void validarLexemaMain(String l, String t) {
+//        if (l.matches(varboolean)) {
+//            // El lexema es válido
+//            for (int i = 0; i < reservadas.length; i++) {
+//                if (t.equals(reservadas[i].var)) {
+//                    // Si existe en el TABSIM, hace nada...
+//                    System.out.println("TOKEN YA DECLARADO EN EL TABSIM!!");
+//                } else {
+//                    System.out.println("TOKEN NO DECLARADO EN EL TABSIM");
+//
+//                }
+//            }
+//        } else {
+//            System.out.println("Error en la linea []");
+//        }
+//    }
 }
