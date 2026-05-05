@@ -152,7 +152,7 @@ public class analizadorPartTwo {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }       
 
     static void validarLexemaEntero(String l, String t) {
         TABSIM[] reservadas = {
