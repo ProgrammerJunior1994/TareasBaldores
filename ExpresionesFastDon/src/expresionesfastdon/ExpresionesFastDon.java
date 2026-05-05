@@ -16,13 +16,14 @@ public class ExpresionesFastDon {
         do {
             try {
                 System.out.println("Elige una expresion para validarla");
-                System.out.println("1. Verificar la declaracion de Tipos de Datos.");
-                System.out.println("2. Verificar la declaracion de las Estructuras Condicionales.");
-                System.out.println("3. Verificar la declaracion de las Estructuras de Repeticion.");
+                System.out.println("1. Validar Tipos de Datos.");
+                System.out.println("2. Validar Estructuras Condicionales.");
+                System.out.println("3. Validar Estructuras de Repeticion.");
+                System.out.println("4. Validar función principal.");
                 System.out.println("Presiona 0 para salir del programa.");
                 opcExpre = sc.nextInt();
             } catch (InputMismatchException e) {
-                System.out.println("Error: opcion no valida..");
+                System.out.println("Error: opción no válida..");
                 sc.nextLine();
                 opcExpre = -1;
                 continue;
@@ -35,11 +36,11 @@ public class ExpresionesFastDon {
                     try {
                         System.out.println("\t===||Prueba de expresiones de FastDon||===");
                         System.out.println("Ingresa una expresion para verificar:");
-                        System.out.println("1. Declaracion de una variable Entera (int).");
-                        System.out.println("2. Declaracion de una variable de Cadena (String).");
+                        System.out.println("1. Declaración de una variable Entera (int).");
+                        System.out.println("2. Declaración de una variable de Cadena (String).");
 //                        System.out.println("3. Declaracion de una variable doble (double)."); // Eliminar nÃºmeros con nÃºmeros decimal y flotantes (Double y Float)
 //                        System.out.println("4. Declaracion de una variable flotante (float).");
-                        System.out.println("5. Declaracion de una variable Booleana (boolean).");
+                        System.out.println("3. Declaración de una variable Booleana (boolean).");
                         System.out.println("Presiona 0 para salir del programa.");
                         opc = sc.nextInt();
                     } catch (InputMismatchException e) {
@@ -96,7 +97,7 @@ public class ExpresionesFastDon {
 //                            }
 //                            break;
 
-                        case 5:
+                        case 3:
                             System.out.println("Ingresa la declaracion de una variable booleana: ");
                             String booleano = sc.nextLine();
                             String varBoolean = "^\\s*boolean\\s+[a-zA-Z_][a-zA-Z0-9_]*(\\s*=\\s*(true|false))?\\s*;\\s*$";
