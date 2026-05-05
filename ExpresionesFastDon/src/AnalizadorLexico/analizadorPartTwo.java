@@ -247,6 +247,31 @@ public class analizadorPartTwo {
             System.out.println("Error en la linea []");
         }
     }
+    
+    static void validarLexemaMain(String l, String t){
+        boolean existe = false;
+        String varboolean = "^\\s*boolean\\s+[a-zA-Z_][a-zA-Z0-9_]*(\\s*=\\s*(true|false))?\\s*;\\s*$";
+        if (l.matches(varboolean)) {
+            // El lexema es válido
+            for (int i = 0; i < reservadas.size(); i++) {
+                if (t.equals(reservadas.get(i).var)) {
+                    existe = true;
+                    break;
+                }
+            }
+            if (existe) {
+                System.out.println("VARIABLE YA DECLARADA EN EL TABSIM");
+            } else {
+                reservadas.add(new TABSIM(t, t, "0", reservadas.size()));
+                System.out.println("TOKEN AÑADIDO AL TABSIM");
+            }
+        } else {
+            System.out.println("Error en la linea []");
+        }
+        
+    }
+    
+    
 
 //    static void validarLexemaMain(String l, String t) {
 //        if (l.matches(varboolean)) {
