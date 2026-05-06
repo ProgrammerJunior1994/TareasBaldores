@@ -153,6 +153,9 @@ public class analizadorPartTwo {
                             case "boolean":
                                 validarLexemaBoolean(linea, t);
                                 break;
+                            default:
+                                validarAll(linea, t);
+                                break;
                         }
 //                        if(t.equals("int")){
 //                            String varentera = "^\\s*int\\s+[a-zA-Z_][a-zA-Z0-9_]*(\\s*=\\s*-?\\d+)?\\s*;\\s*$";
@@ -168,7 +171,7 @@ public class analizadorPartTwo {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }       
+    }
 
     static void validarLexemaInt(String l, String t) {
         boolean existe = false;
@@ -247,8 +250,8 @@ public class analizadorPartTwo {
             System.out.println("Error en la linea []");
         }
     }
-    
-    static void validarLexemaMain(String l, String t){
+
+    static void validarLexemaMain(String l, String t) {
         boolean existe = false;
         String varboolean = "^\\s*boolean\\s+[a-zA-Z_][a-zA-Z0-9_]*(\\s*=\\s*(true|false))?\\s*;\\s*$";
         if (l.matches(varboolean)) {
@@ -268,10 +271,25 @@ public class analizadorPartTwo {
         } else {
             System.out.println("Error en la linea []");
         }
-        
+
     }
-    
-    
+
+    static void validarAll(String l, String t) {
+        boolean existe = false;
+        for (int i = 0; i < reservadas.size(); i++) {
+            if (t.equals(reservadas.get(i).var)) {
+                existe = true;
+                break;
+            }
+        }
+        if (existe) {
+            System.out.println(t + " DECLARADO DOS VECES!!!!!!!");
+        } else {
+            reservadas.add(new TABSIM(t, t, "0", reservadas.size()));
+            System.out.println(t + " AÑADIDO AL TABSIM");
+        }
+
+    }
 
 //    static void validarLexemaMain(String l, String t) {
 //        if (l.matches(varboolean)) {
