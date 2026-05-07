@@ -38,7 +38,7 @@ public class ExpresionesFastDon {
                         System.out.println("Ingresa una expresion para verificar:");
                         System.out.println("1. Declaración de una variable Entera (int).");
                         System.out.println("2. Declaración de una variable de Cadena (String).");
-//                        System.out.println("3. Declaracion de una variable doble (double)."); // Eliminar nÃºmeros con nÃºmeros decimal y flotantes (Double y Float)
+//                        System.out.println("3. Declaracion de una variable doble (double)."); // Eliminar números con números decimal y flotantes (Double y Float)
 //                        System.out.println("4. Declaracion de una variable flotante (float).");
                         System.out.println("3. Declaración de una variable Booleana (boolean).");
                         System.out.println("Presiona 0 para salir del programa.");

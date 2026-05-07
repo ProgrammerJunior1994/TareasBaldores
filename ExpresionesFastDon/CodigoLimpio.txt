@@ -1,9 +1,8 @@
-public class Analizador {
 main ( String [ ] args ) {
 boolean asiste ;
 boolean acceso = true ;
 int suma = 0 ;
-int = 0 ;
+int suma= 0 ;
 int i ;
 String nombre ;
 String escuela = " tsj " ;
@@ -13,5 +12,4 @@ suma = suma + i ;
 }
 }
 print ( " La suma de los pares es : " + suma ) ;
-}
 }

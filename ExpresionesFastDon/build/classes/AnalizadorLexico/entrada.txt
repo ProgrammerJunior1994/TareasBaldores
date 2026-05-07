@@ -1,7 +1,4 @@
-// Clase principal para probar el analizador lÃ©xico
-public class Analizador {
-
-    // Método main: punto de entrada del programa
+// Clase  main: punto de entrada del programa
     main(String[] args) {
         // Declaración de una variable booleana
         boolean asiste;         // Variable booleana sin valor
@@ -11,7 +8,7 @@ public class Analizador {
 
         // Declaración de variables enteras
         int suma = 0   ;        // Acumulador de la suma
-        int  = 0   ;        // Acumulador de la suma
+        int  suma= 0   ;        // Acumulador de la suma
         int i;               // Variable de control del bucle
 
         String nombre;      // Variable nombre de tipo String (cadena de caracteres)
@@ -32,4 +29,3 @@ public class Analizador {
         // Salida por consola: muestra el resultado final
         print("La suma de los pares es: " + suma);
     }
-}
