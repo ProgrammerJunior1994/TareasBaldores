@@ -103,27 +103,27 @@ public class analizadorPartTwo {
 
     public static void main(String[] args) {
 
-//        reservadas.add(new TABSIM("int", "reservada", "0", 0));
-//        reservadas.add(new TABSIM("String", "reservada", "0", 1));
-//        reservadas.add(new TABSIM("boolean", "reservada", "0", 2));
-//        reservadas.add(new TABSIM("main", "reservada", "0", 3));
-//        reservadas.add(new TABSIM("if", "reservada", "0", 4));
-//        reservadas.add(new TABSIM("else", "reservada", "0", 5));
-//        reservadas.add(new TABSIM("for", "reservadas", "0", 6));
-//        reservadas.add(new TABSIM("whie", "reservadas", "0", 7));
-//        reservadas.add(new TABSIM("{", "reservada", "0", 8));
-//        reservadas.add(new TABSIM("}", "reservada", "0", 9));
-//        reservadas.add(new TABSIM("(", "reservada", "0", 10));
-//        reservadas.add(new TABSIM(")", "reservada", "0", 11));
-//        reservadas.add(new TABSIM("+", "reservada", "0", 12));
-//        reservadas.add(new TABSIM("-", "reservada", "0", 13));
-//        reservadas.add(new TABSIM("*", "reservada", "0", 14));
-//        reservadas.add(new TABSIM("/", "reservada", "0", 15));
-//        reservadas.add(new TABSIM("\"", "reservada", "0", 16));
-//        reservadas.add(new TABSIM("=", "reservada", "0", 17));
-//        reservadas.add(new TABSIM("==", "reservada", "0", 19));
-//        reservadas.add(new TABSIM("!", "reservada", "0", 18));
-//        reservadas.add(new TABSIM(";", "reservada", "0", 19));
+        reservadas.add(new TABSIM("int", "reservada", "0", "idx", 0));
+        reservadas.add(new TABSIM("String", "reservada", "0", "idx", 1));
+        reservadas.add(new TABSIM("boolean", "reservada", "0", "idx", 2));
+        reservadas.add(new TABSIM("main", "reservada", "0", "idx", 3));
+        reservadas.add(new TABSIM("if", "reservada", "0", "idx", 4));
+        reservadas.add(new TABSIM("else", "reservada", "0", "idx", 5));
+        reservadas.add(new TABSIM("for", "reservadas", "0", "idx", 6));
+        reservadas.add(new TABSIM("whie", "reservadas", "0", "idx", 7));
+        reservadas.add(new TABSIM("{", "reservada", "0", "idx", 8));
+        reservadas.add(new TABSIM("}", "reservada", "0", "idx", 9));
+        reservadas.add(new TABSIM("(", "reservada", "0", "idx", 10));
+        reservadas.add(new TABSIM(")", "reservada", "0", "idx", 11));
+        reservadas.add(new TABSIM("+", "reservada", "0", "idx", 12));
+        reservadas.add(new TABSIM("-", "reservada", "0", "idx", 13));
+        reservadas.add(new TABSIM("*", "reservada", "0", "idx", 14));
+        reservadas.add(new TABSIM("/", "reservada", "0", "idx", 15));
+        reservadas.add(new TABSIM("\"", "reservada", "0", "idx", 16));
+        reservadas.add(new TABSIM("=", "reservada", "0", "idx", 17));
+        reservadas.add(new TABSIM("==", "reservada", "0", "idx", 19));
+        reservadas.add(new TABSIM("!", "reservada", "0", "idx", 18));
+        reservadas.add(new TABSIM(";", "reservada", "0", "idx", 19));
         // Declaración de elementos del TABSIM
 //        TABSIM entero = new TABSIM("int", "int", "0", 0);
 //        TABSIM cadena = new TABSIM("String", "String", "0", 1); //Primera prueba para la creación de elementos del TABSIM (buena idea pero puede ser mejor)
@@ -150,7 +150,7 @@ public class analizadorPartTwo {
                         switch (t) {
                             case "int":
 
-                                validarLexemaInt(linea, tokens);
+                                validarLexemaInt(linea, t);
 //                                String varentera = "^\\s*int\\s+[a-zA-Z_][a-zA-Z0-9_]*(\\s*=\\s*-?\\d+)?\\s*;\\s*$";
 //                                if (linea.matches(varentera)) {
 //                                    // El lexema es válido
@@ -187,7 +187,7 @@ public class analizadorPartTwo {
         }
     }
 
-    static void validarLexemaInt(String l, String[] tokens) {
+    static void validarLexemaInt(String l, String t) {
         boolean existe = false;
 //        TABSIM[] reservadas = {
 //            new TABSIM("int", "int", "0", 0),
@@ -217,16 +217,24 @@ public class analizadorPartTwo {
 //                System.out.println("ID: " + reservadas.get(0).id);
 //                System.out.println("TOKEN AÑADIDO AL TABSIM");
 //            }
-
-            for (int i = 0; i < reservadas.size(); i++) {
-                for (String t : tokens) {
-                    if(t.equals(reservadas.get(i).var)){
-                        System.out.println("Está declarada");
+                for (int i = 0; i < reservadas.size(); i++) {
+                    if (!(t.equals(reservadas.get(i).var) && (reservadas.get(i).tipo == "reservadas"))) {
+                        if (t.equals(reservadas.get(i).var) && reservadas.get(i).tipo == "reservada") {
+                            t = reservadas.get(i).idx + reservadas.get(i).id;
+                            System.out.println(t);
+                        }
+                    } else {
+                        reservadas.add(new TABSIM(t, "variable", " ", "idx", reservadas.size()));
+//                        System.out.println(reservadas.get(i).toString());
+                            if(reservadas.get(i).tipo == "variable"){
+                                System.out.println("Error: Variable declarada más de una vez");
+                            }
+                            System.out.println(t);
                     }
+
                 }
-            }
         } else {
-            System.out.println("Error en la linea []");
+            System.out.println("Error: Línea de código no escrita corretamente.");
         }
     }
 
@@ -275,7 +283,6 @@ public class analizadorPartTwo {
 //        }
 //    }
 //
-
 //    static void validarLexemaMain(String l, String t) {
 //        boolean existe = false;
 //        String varboolean = "^\\s*boolean\\s+[a-zA-Z_][a-zA-Z0-9_]*(\\s*=\\s*(true|false))?\\s*;\\s*$";
@@ -315,9 +322,7 @@ public class analizadorPartTwo {
 //        }
 //
 //    }
-    
     //Descomentar aquí
-
 //    static void validarLexemaMain(String l, String t) {
 //        if (l.matches(varboolean)) {
 //            // El lexema es válido
