@@ -18,7 +18,7 @@ import java.util.ArrayList;
  *
  * @author br340
  */
-public class analizadorPartTwo {
+public class analizadorPartTwo1 {
 
 //    static TABSIM[] reservadas = {
 //        new TABSIM("int", "int", "0", 0),
@@ -35,7 +35,7 @@ public class analizadorPartTwo {
 
     public static void limpiarArvhivo() {
         try (
-                InputStream is = analizadorPartTwo.class.getResourceAsStream("entrada.txt"); BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+                InputStream is = analizadorPartTwo1.class.getResourceAsStream("entrada.txt"); BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
 
             if (is == null) {
                 System.out.println("No se encuentra entrada.txt en el paquete.");
@@ -72,10 +72,8 @@ public class analizadorPartTwo {
             texto = texto.replaceAll("\\[", "\\[ "); // Agregar un espacio después de un inicio de corchete
             texto = texto.replaceAll("\\]", "\\] "); // Agregar un espacio después de un cierre de corchete
             texto = texto.replaceAll("\\]", " \\]"); // Agregar un espacio antes de un cierre de corchete
-            texto = texto.replaceAll("=", "= "); // Agregar un espacio antes de un signo de igual
-            texto = texto.replaceAll("=", " ="); // Agregar un espacio antes de un signo de igual
-            texto = texto.replaceAll("==", "= "); // Agregar un espacio antes de un signo doble de igual
-            texto = texto.replaceAll("==", " ="); // Agregar un espacio antes de un signo doble de igual
+            texto = texto.replaceAll("=", "= "); // Agregar un espacio antes de un cierre de corchete
+            texto = texto.replaceAll("=", " ="); // Agregar un espacio antes de un cierre de corchete
 
             // Quitar tabulaciones
             texto = texto.replaceAll("\\t", " ");
@@ -99,12 +97,14 @@ public class analizadorPartTwo {
             bw.close();
 
             System.out.println("Archivo creado en: " + archivoSalida.getAbsolutePath());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public static void main(String[] args) {
+
         reservadas.add(new TABSIM("int", "reservada", "0", "idx", 0));
         reservadas.add(new TABSIM("String", "reservada", "0", "idx", 1));
         reservadas.add(new TABSIM("boolean", "reservada", "0", "idx", 2));
@@ -134,8 +134,7 @@ public class analizadorPartTwo {
 //        System.out.println(reservadas.get(0).var);
 //        System.out.println(reservadas.get(1).var);
 //        System.out.println(reservadas.get(2).var);
-        analizadorPartTwo.limpiarArvhivo();
-        System.out.println("");
+        analizadorPartTwo1.limpiarArvhivo();
 //        System.out.println(System.getProperty("user.dir"));
 //        System.out.println("Bienvenidos a mi programa, ¿Cómo están?"); // Impresión para probar acentos en consola
         try {
@@ -169,9 +168,6 @@ public class analizadorPartTwo {
                                 break;
                             case "boolean":
                                 validarLexemaBoolean(linea, tokens);
-                                break;
-                            case "for":
-                                validarLexemaFor(linea, tokens);
                                 break;
                         }
 //                        if(t.equals("int")){
@@ -218,14 +214,10 @@ public class analizadorPartTwo {
                 String valor = "0";
                 if (tokens.length == 5) {
                     valor = tokens[3];
-                    reservadas.add(new TABSIM(tokens[1], "variable", "0", "idx", reservadas.size()));
-
+                    reservadas.add(new TABSIM(tokens[1], "variable", valor, "idx", reservadas.size()));
                     tokens[1] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
-
                     System.out.println(tokens[1]);
                     System.out.println(tokens[2]);
-                    reservadas.add(new TABSIM(tokens[3], "valor", valor, "idx", reservadas.size()));
-                    tokens[3] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
                     System.out.println(tokens[3]);
                     System.out.println(tokens[4]);
                 } else {
@@ -301,13 +293,11 @@ public class analizadorPartTwo {
                 String valor = "0";
                 if (tokens.length == 5) {
                     valor = tokens[3];
-                    reservadas.add(new TABSIM(tokens[1], "variable", "0", "idx", reservadas.size()));
+                    reservadas.add(new TABSIM(tokens[1], "variable", valor, "idx", reservadas.size()));
                     tokens[1] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
                     tokens[3] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
                     System.out.println(tokens[1]);
                     System.out.println(tokens[2]);
-                    reservadas.add(new TABSIM(tokens[3], "valor", valor, "idx", reservadas.size()));
-                    tokens[3] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
                     System.out.println(tokens[3]);
                     System.out.println(tokens[4]);
                 } else {
@@ -353,13 +343,11 @@ public class analizadorPartTwo {
                 String valor = "0";
                 if (tokens.length == 5) {
                     valor = tokens[3];
-                    reservadas.add(new TABSIM(tokens[1], "variable", "0", "idx", reservadas.size()));
+                    reservadas.add(new TABSIM(tokens[1], "variable", valor, "idx", reservadas.size()));
                     tokens[1] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
                     tokens[3] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
                     System.out.println(tokens[1]);
                     System.out.println(tokens[2]);
-                    reservadas.add(new TABSIM(tokens[3], "valor", valor, "idx", reservadas.size()));
-                    tokens[3] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
                     System.out.println(tokens[3]);
                     System.out.println(tokens[4]);
                 } else {
@@ -448,38 +436,11 @@ public class analizadorPartTwo {
     //        }
     //    }
 
-    static void validarLexemaFor(String l, String[] tokens) {
-        String varFor = "^\\s*for\\s*\\(\\s*[^;]*;\\s*[a-zA-Z_][a-zA-Z0-9_]*(\\s*[+\\-*/]\\s*[a-zA-Z0-9_]+)*\\s*(==|!=|<=|>=|<|>)\\s*[a-zA-Z0-9_]+\\s*;\\s*[^)]*\\)\\s*\\{[^}]*\\s*$";
-        if (l.matches(varFor)) {
-            boolean existe = false;
-            System.out.println(tokens[0]);
-            for (int i = 0; i < reservadas.size(); i++) {
-                if (tokens[1].equals(reservadas.get(i).var)) {
-                    System.out.println("¡Error: Variable redeclarada!");
-                    existe = true;
-                    break;
-                }
-            }
-            if (!existe) {
-                String valor = "0";
-                if (tokens.length == 5) {
-                    valor = tokens[3];
-                    reservadas.add(new TABSIM(tokens[1], "variable", "0", "idx", reservadas.size()));
-                    tokens[1] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
-                    tokens[3] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
-                    System.out.println(tokens[1]);
-                    System.out.println(tokens[2]);
-                    reservadas.add(new TABSIM(tokens[3], "valor", valor, "idx", reservadas.size()));
-                    tokens[3] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
-                    System.out.println(tokens[3]);
-                    System.out.println(tokens[4]);
-                } else {
-                    valor = "0";
-                    reservadas.add(new TABSIM(tokens[1], "variable", valor, "idx", reservadas.size()));
-                    tokens[1] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
-                    System.out.println(tokens[1]);
-                    System.out.println(tokens[2]);
-                }
+    static void verificarToken(String[] t) {
+        for (int i = 0; i < reservadas.size(); i++) {
+            if (t.equals(reservadas.get(i).valor)) {
+                String token = reservadas.get(i).idx + reservadas.get(i).id;
+                System.out.println(token);
             }
         }
     }

@@ -12,12 +12,14 @@ public class TABSIM {
     String var;
     String tipo;
     String valor;
+    String idx;
     int id;
 
-    public TABSIM(String var, String valor, String tipo, int id) {
+    public TABSIM(String var, String tipo, String valor, String idx, int id) {
         this.var = var;
-        this.valor = valor;
         this.tipo = tipo;
+        this.valor = valor;
+        this.idx = idx;
         this.id = id;
     }
 
@@ -29,6 +31,14 @@ public class TABSIM {
         this.var = var;
     }
 
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
     public String getValor() {
         return valor;
     }
@@ -37,12 +47,12 @@ public class TABSIM {
         this.valor = valor;
     }
 
-    public String getTipo() {
-        return tipo;
+    public String getIdx() {
+        return idx;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setIdx(String idx) {
+        this.idx = idx;
     }
 
     public int getId() {
@@ -53,4 +63,6 @@ public class TABSIM {
         this.id = id;
     }
     
+    
+
 }
