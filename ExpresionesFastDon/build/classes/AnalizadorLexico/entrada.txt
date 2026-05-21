@@ -1,5 +1,5 @@
 // Clase  main: punto de entrada del programa
-    main(String[] args) {
+    main() {
         // Declaración de una variable booleana
         boolean asiste;         // Variable booleana sin valor
         boolean     acceso = true;  // Variable para el control de acceso
@@ -7,21 +7,26 @@
 
 
         // Declaración de variables enteras
-        int suma = 0   ;        // Acumulador de la suma
+        int      suma = 0   ;        // Acumulador de la suma
         int  suma= 0   ;        // Acumulador de la suma
-        int i;               // Variable de control del bucle
-
+        int cantidad  ;
+        int i = 400;               // Variable de control del bucle
+        int edad = 21;
+        int edad = 30;
+        int;
         String nombre;      // Variable nombre de tipo String (cadena de caracteres)
         String escuela = "tsj"; // Variable escuela de tipo String (cadena de caracteres)
+        boolean esta = true;
+        String escuela = "Hola";
 
 
         // Bucle for: recorre valores de 0 a 9
         for (i = 0; i < 10; i++) {
             
-            // Condicional if: verifica si el número es par
+            // Condicional if: 
             if (i % 2 == 0) {
                 
-                // Operación aritmÃ©tica: suma acumulada
+                // Operación aritmética: suma acumulada
                 suma = suma + i;
             }
         }

@@ -1,13 +1,19 @@
-main ( String [ ] args ) {
+main ( ) {
 boolean asiste ;
 boolean acceso = true ;
 int suma = 0 ;
-int suma= 0 ;
-int i ;
+int suma = 0 ;
+int cantidad ;
+int i = 400 ;
+int edad = 21 ;
+int edad = 30 ;
+int ;
 String nombre ;
 String escuela = " tsj " ;
+boolean esta = true ;
+String escuela = " Hola " ;
 for ( i = 0 ; i < 10 ; i++ ) {
-if ( i % 2 == 0 ) {
+if ( i % 2 = = 0 ) {
 suma = suma + i ;
 }
 }

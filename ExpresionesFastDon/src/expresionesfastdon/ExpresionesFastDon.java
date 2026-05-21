@@ -96,7 +96,6 @@ public class ExpresionesFastDon {
 //                                System.out.println("Declaracion invalida.");
 //                            }
 //                            break;
-
                         case 3:
                             System.out.println("Ingresa la declaracion de una variable booleana: ");
                             String booleano = sc.nextLine();
@@ -137,7 +136,7 @@ public class ExpresionesFastDon {
                         case 1:
                             System.out.println("Ingresa una estructura if-else:");
                             String ifElse = sc.nextLine();
-                            String varIfElse = "^\\s*if\\s*\\(\\s*[a-zA-Z_][a-zA-Z0-9_]*(\\s*[+\\-*/]\\s*[a-zA-Z0-9_]+)*\\s*(==|!=|<=|>=|<|>)\\s*[a-zA-Z0-9_]+\\s*\\)\\s*\\{[^}]*\\}\\s*else\\s*\\{[^}]*\\}\\s*$";  
+                            String varIfElse = "^\\s*if\\s*\\(\\s*[a-zA-Z_][a-zA-Z0-9_]*(\\s*[+\\-*/]\\s*[a-zA-Z0-9_]+)*\\s*(==|!=|<=|>=|<|>)\\s*[a-zA-Z0-9_]+\\s*\\)\\s*\\{[^}]*\\}\\s*else\\s*\\{[^}]*\\}\\s*$";
                             if (ifElse.matches(varIfElse)) {
                                 System.out.println("!!!Declaracion de estructura if-else valida!!!");
                             } else {
@@ -182,7 +181,7 @@ public class ExpresionesFastDon {
                         case 1:
                             System.out.println("Ingresa una estructura for:");
                             String forE = sc.nextLine();
-                            String varFor = "^\\s*for\\s*\\(\\s*[^;]*;\\s*[a-zA-Z_][a-zA-Z0-9_]*(\\s*[+\\-*/]\\s*[a-zA-Z0-9_]+)*\\s*(==|!=|<=|>=|<|>)\\s*[a-zA-Z0-9_]+\\s*;\\s*[^)]*\\)\\s*\\{[^}]*\\}\\s*$";
+                            String varFor = "^\\s*for\\s*\\(\\s*[^;]*;\\s*[a-zA-Z_][a-zA-Z0-9_]*(\\s*[+\\-*/]\\s*[a-zA-Z0-9_]+)*\\s*(==|!=|<=|>=|<|>)\\s*[a-zA-Z0-9_]+\\s*;\\s*[^)]*\\)\\s*\\{[^}]*\\s*$";
                             if (forE.matches(varFor)) {
                                 System.out.println("!!!Declaracion de estructura for valida!!!");
                             } else {
@@ -220,6 +219,16 @@ public class ExpresionesFastDon {
 
                 case 0:
                     error = false;
+                    break;
+                case 4:
+                    System.out.println("Ingresa una estructura main:");
+                    String doWhile = sc.nextLine();
+                    String varDoWhile = "^\\s*do\\s*\\{[^}]*\\}\\s*while\\s*\\(\\s*[a-zA-Z_][a-zA-Z0-9_]*(\\s*[+\\-*/]\\s*[a-zA-Z0-9_]+)*\\s*(==|!=|<=|>=|<|>)\\s*[a-zA-Z0-9_]+\\s*\\)\\s*;\\s*$";
+                    if (doWhile.matches(varDoWhile)) {
+                        System.out.println("!!!Declaracion de estructura do-while valida!!!");
+                    } else {
+                        System.out.println("Estructura do-while invalida.");
+                    }
                     break;
 
                 default:
