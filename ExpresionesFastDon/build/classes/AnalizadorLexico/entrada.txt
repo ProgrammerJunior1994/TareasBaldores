@@ -28,6 +28,7 @@
                 
                 // Operación aritmética: suma acumulada
                 suma = suma + i;
+
             }
         }
 

@@ -303,7 +303,6 @@ public class analizadorPartTwo {
                     valor = tokens[3];
                     reservadas.add(new TABSIM(tokens[1], "variable", "0", "idx", reservadas.size()));
                     tokens[1] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
-                    tokens[3] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
                     System.out.println(tokens[1]);
                     System.out.println(tokens[2]);
                     reservadas.add(new TABSIM(tokens[3], "valor", valor, "idx", reservadas.size()));
@@ -355,7 +354,6 @@ public class analizadorPartTwo {
                     valor = tokens[3];
                     reservadas.add(new TABSIM(tokens[1], "variable", "0", "idx", reservadas.size()));
                     tokens[1] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
-                    tokens[3] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
                     System.out.println(tokens[1]);
                     System.out.println(tokens[2]);
                     reservadas.add(new TABSIM(tokens[3], "valor", valor, "idx", reservadas.size()));
@@ -466,7 +464,6 @@ public class analizadorPartTwo {
                     valor = tokens[3];
                     reservadas.add(new TABSIM(tokens[1], "variable", "0", "idx", reservadas.size()));
                     tokens[1] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
-                    tokens[3] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
                     System.out.println(tokens[1]);
                     System.out.println(tokens[2]);
                     reservadas.add(new TABSIM(tokens[3], "valor", valor, "idx", reservadas.size()));
@@ -481,6 +478,8 @@ public class analizadorPartTwo {
                     System.out.println(tokens[2]);
                 }
             }
+        } else {
+            System.out.println("Error: Línea de código no escrita correctamente.");
         }
     }
 
