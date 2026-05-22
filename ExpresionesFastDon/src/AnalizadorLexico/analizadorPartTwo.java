@@ -450,36 +450,7 @@ public class analizadorPartTwo {
         String varFor = "^\\s*for\\s*\\(\\s*[^;]*;\\s*[a-zA-Z_][a-zA-Z0-9_]*(\\s*[+\\-*/]\\s*[a-zA-Z0-9_]+)*\\s*(==|!=|<=|>=|<|>)\\s*[a-zA-Z0-9_]+\\s*;\\s*[^)]*\\)\\s*\\{[^}]*\\s*$";
         if (l.matches(varFor)) {
             boolean existe = false;
-            System.out.println(tokens[0]);
-            for (int i = 0; i < reservadas.size(); i++) {
-                if (tokens[1].equals(reservadas.get(i).var)) {
-                    System.out.println("¡Error: Variable redeclarada!");
-                    existe = true;
-                    break;
-                }
-            }
-            if (!existe) {
-                String valor = "0";
-                if (tokens.length == 5) {
-                    valor = tokens[3];
-                    reservadas.add(new TABSIM(tokens[1], "variable", "0", "idx", reservadas.size()));
-                    tokens[1] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
-                    System.out.println(tokens[1]);
-                    System.out.println(tokens[2]);
-                    reservadas.add(new TABSIM(tokens[3], "valor", valor, "idx", reservadas.size()));
-                    tokens[3] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
-                    System.out.println(tokens[3]);
-                    System.out.println(tokens[4]);
-                } else {
-                    valor = "0";
-                    reservadas.add(new TABSIM(tokens[1], "variable", valor, "idx", reservadas.size()));
-                    tokens[1] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
-                    System.out.println(tokens[1]);
-                    System.out.println(tokens[2]);
-                }
-            }
-        } else {
-            System.out.println("Error: Línea de código no escrita correctamente.");
+            
         }
     }
 
