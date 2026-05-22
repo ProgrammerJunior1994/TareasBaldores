@@ -192,15 +192,17 @@ public class ExpresionesFastDon {
                             String varFor = "^\\s*for\\s*\\(\\s*[^;]*;\\s*[a-zA-Z_][a-zA-Z0-9_]*(\\s*[+\\-*/]\\s*[a-zA-Z0-9_]+)*\\s*(==|!=|<=|>=|<|>)\\s*[a-zA-Z0-9_]+\\s*;\\s*[^)]*\\)\\s*\\{[^}]*\\s*$";
                             if (forE.matches(varFor)) {
                                 System.out.println("!!!Declaracion de estructura for valida!!!");
+                                error = false;
                             } else {
                                 System.out.println("Estructura for invalida.");
+                                error = true;
                             }
                             break;
 
                         case 2:
                             System.out.println("Ingresa una estructura while:");
                             String whilE = sc.nextLine();
-                            String varWhile = "^\\s*while\\s*\\(\\s*[a-zA-Z_][a-zA-Z0-9_]*(\\s*[+\\-*/]\\s*[a-zA-Z0-9_]+)*\\s*(==|!=|<=|>=|<|>)\\s*[a-zA-Z0-9_]+\\s*\\)\\s*\\{[^}]*\\}\\s*$";
+                            String varWhile = "^\\s*while\\s*\\(\\s*[a-zA-Z_][a-zA-Z0-9_]*(\\s*[+\\-*/]\\s*[a-zA-Z0-9_]+)*\\s*(==|!=|<=|>=|<|>\\s*[a-zA-Z0-9_]+)?\\s*\\)\\s*\\{[^}]*\\s*$";
                             if (whilE.matches(varWhile)) {
                                 System.out.println("!!!Declaracion de estructura while valida!!!");
                                 error = false;
@@ -233,7 +235,7 @@ public class ExpresionesFastDon {
                     String main = sc.nextLine();
                     String varMain = "^\\s*main\\s*\\(\\s*\\)\\s*\\{.*(\\})?\\s*$";
                     if (main.matches(varMain)) {
-                        System.out.println("!!!Declaracion de estructura do-while valida!!!");
+                        System.out.println("!!!Declaracion main válida!!!");
                         error = false;
                     } else {
                         System.out.println("Estructura do-while invalida.");
@@ -259,10 +261,10 @@ public class ExpresionesFastDon {
                             System.out.println("Ingresa la estructura de entrada:");
                             String entrada = sc.nextLine();
                             String varInput = "^\\s*input(S|I|B)\\s*\\(\\s*[a-zA-Z_][a-zA-Z0-9_]*\\s*\\)\\s*;\\s*$";
-                            if(entrada.matches(varInput)){
+                            if (entrada.matches(varInput)) {
                                 System.out.println("Estructura válida.");
                                 error = false;
-                            }else{
+                            } else {
                                 System.out.println("Error: Estructura mal escrita.");
                                 error = true;
                             }
@@ -271,10 +273,10 @@ public class ExpresionesFastDon {
                             System.out.println("Ingresa la estructura de entrada:");
                             String print = sc.nextLine();
                             String varPrint = "^\\s*print\\s*\\(\\s*.*\\s*\\)\\s*;\\s*$";
-                            if(print.matches(varPrint)){
+                            if (print.matches(varPrint)) {
                                 System.out.println("Estructura válida.");
                                 error = false;
-                            }else{
+                            } else {
                                 System.out.println("Error: Estructura mal escrita.");
                                 error = true;
                             }
@@ -282,7 +284,7 @@ public class ExpresionesFastDon {
                         default:
                             throw new AssertionError();
                     }
-                        
+
                     break;
                 case 0:
                     System.out.println("Adios..");
