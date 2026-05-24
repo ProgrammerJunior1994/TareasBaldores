@@ -9,8 +9,7 @@
         // Declaración de variables enteras
         int      suma = 0   ;        // Acumulador de la suma
         int  suma= 0   ;        // Acumulador de la suma
-        int cantidad  ;
-        int i = 400;               // Variable de control del bucle
+        int cantidad  ;             // Variable de control del bucle
         int edad = 21;
         int edad = 30;
         int;

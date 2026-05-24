@@ -4,7 +4,6 @@ boolean acceso = true ;
 int suma = 0 ;
 int suma = 0 ;
 int cantidad ;
-int i = 400 ;
 int edad = 21 ;
 int edad = 30 ;
 int ;

@@ -173,6 +173,9 @@ public class analizadorPartTwo {
                             case "for":
                                 validarLexemaFor(linea, tokens);
                                 break;
+                            case "switch":
+
+                                break;
                         }
 //                        if(t.equals("int")){
 //                            String varentera = "^\\s*int\\s+[a-zA-Z_][a-zA-Z0-9_]*(\\s*=\\s*-?\\d+)?\\s*;\\s*$";
@@ -448,9 +451,35 @@ public class analizadorPartTwo {
 
     static void validarLexemaFor(String l, String[] tokens) {
         String varFor = "^\\s*for\\s*\\(\\s*[^;]*;\\s*[a-zA-Z_][a-zA-Z0-9_]*(\\s*[+\\-*/]\\s*[a-zA-Z0-9_]+)*\\s*(==|!=|<=|>=|<|>)\\s*[a-zA-Z0-9_]+\\s*;\\s*[^)]*\\)\\s*\\{[^}]*\\s*$";
+        for (int i = 0; i < 10; i++) {
+
+        }
         if (l.matches(varFor)) {
-            boolean existe = false;
-            
+            boolean existe = true;
+            System.out.println(tokens[0]);
+            System.out.println(tokens[1]);
+            System.out.println(tokens[2]);
+            for (int i = 0; i < reservadas.size(); i++) {
+                if (tokens[3].equals(reservadas.get(i).var)) {
+                    tokens[3] = reservadas.get(i).idx + reservadas.get(i).id;
+                    System.out.println(tokens[3]);
+                    existe = true;
+                    break;
+                }
+            }
+            if (!existe) {
+                    reservadas.add(new TABSIM(tokens[3], "variable", "0", "idx", reservadas.size()));
+                    tokens[3] = reservadas.get(reservadas.size()-1).idx + reservadas.get(reservadas.size()-1).id;
+                    System.out.println(tokens[3]);
+                }
+            String valor = tokens[5];
+            System.out.println(tokens[4]);
+            reservadas.add(new TABSIM(tokens[5], "valor", valor, "idx", reservadas.size()));
+            tokens[5] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
+            System.out.println(tokens[5]);
+
+        } else {
+            System.out.println("Error: estructura for mal declarada");
         }
     }
 
