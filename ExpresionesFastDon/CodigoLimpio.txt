@@ -11,9 +11,9 @@ String nombre ;
 String escuela = " tsj " ;
 boolean esta = true ;
 String escuela = " Hola " ;
-for ( int i = 0 ; i < 10 ; i++ ) {
+for ( int i = 0 ; i < 10 ; i ++ ) {
 if ( jaime == 29 && mindy == 30 ) {
-suma = suma + i ;
+suma = suma ++ i ;
 }
 }
 int opcion ;
@@ -31,5 +31,5 @@ inputI ( edad ) ;
 while ( opc == 30 ) {
 edad = 30 ;
 }
-print ( " La suma de los pares es : " + suma ) ;
+print ( " La suma de los pares es : " ++ suma ) ;
 }

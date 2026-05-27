@@ -80,7 +80,7 @@ public class analizadorPartTwo {
             texto = texto.replaceAll("\\[", " \\["); // Agregar un espacio antes de un inicio de corchete
             texto = texto.replaceAll("\\[", "\\[ "); // Agregar un espacio después de un inicio de corchete
             texto = texto.replaceAll("\\]", "\\] "); // Agregar un espacio después de un cierre de corchete
-//            texto = texto.replaceAll("\\++", " ++");
+            texto = texto.replaceAll("\\++", " ++ ");
 
             // Quitar tabulaciones
             texto = texto.replaceAll("\\t", " ");
@@ -297,7 +297,7 @@ public class analizadorPartTwo {
 //                System.out.println("TOKEN AÑADIDO AL TABSIM");
 //            }
         } else {
-            System.out.println("Error: Línea de código no escrita corretamente.");
+            System.out.println("Error: variable int mal declarada.");
         }
     }
 
@@ -349,6 +349,8 @@ public class analizadorPartTwo {
             //            }
             //        } else {
             //            System.out.println("Error en la linea []");
+        }else{
+            System.out.println("Error: variable String mal declarada.");
         }
     }
 
@@ -400,6 +402,8 @@ public class analizadorPartTwo {
             //            }
             //        } else {
             //            System.out.println("Error en la linea []");
+        }else{
+            System.out.println("Error: variable booleana mal declarada.");
         }
     }
     //
@@ -563,7 +567,7 @@ public class analizadorPartTwo {
             System.out.println(tokens[3]);
             System.out.println(tokens[4]);
         } else {
-            System.out.println("Error: Línea de código no escrita correctamente.");
+            System.out.println("Error: estructura switch no escrita correctamente.");
         }
 
     }
@@ -588,7 +592,7 @@ public class analizadorPartTwo {
             System.out.println(tokens[3]);
             System.out.println(tokens[4]);
         } else {
-            System.out.println("Error: línea de código no escrita correctamente.");
+            System.out.println("Error: entrada de datos no escrita correctamente.");
         }
     }
 
