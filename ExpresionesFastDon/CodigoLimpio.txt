@@ -2,7 +2,7 @@ main ( ) {
 boolean asiste ;
 boolean acceso = true ;
 int suma = 0 ;
-int suma = 0 ;
+int suma= 0 ;
 int cantidad ;
 int edad = 21 ;
 int edad = 30 ;
@@ -12,9 +12,24 @@ String escuela = " tsj " ;
 boolean esta = true ;
 String escuela = " Hola " ;
 for ( int i = 0 ; i < 10 ; i++ ) {
-if ( i % 2 = = 0 ) {
+if ( jaime == 29 && mindy == 30 ) {
 suma = suma + i ;
 }
+}
+int opcion ;
+inputI ( opcion ) ;
+switch ( opcion ) {
+case 1 :
+print ( " Hola " ) ;
+break ;
+default :
+break ;
+}
+inputS ( nombre ) ;
+inputB ( esverdadero ) ;
+inputI ( edad ) ;
+while ( opc == 30 ) {
+edad = 30 ;
 }
 print ( " La suma de los pares es : " + suma ) ;
 }

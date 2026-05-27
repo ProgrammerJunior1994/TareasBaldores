@@ -60,6 +60,15 @@ public class analizadorPartTwo {
             texto = texto.replaceAll("(?s)/\\*.*?\\*/", "");
             texto = texto.replaceAll("//.*", "");
 
+            texto = texto.replaceAll("==", " == ");
+            texto = texto.replaceAll("!=", " != ");
+            texto = texto.replaceAll("<=", " <= ");
+            texto = texto.replaceAll(">=", " >= ");
+            texto = texto.replaceAll("&&", " && ");
+            texto = texto.replaceAll("\\|\\|", " || ");
+            texto = texto.replaceAll("<", " < ");
+            texto = texto.replaceAll(">", " > ");
+
             texto = texto.replaceAll("\\(", "( "); // Agregar un espacio después de un inicio de paréntesis
             texto = texto.replaceAll("\\(", " ("); // Agregar un espacio antes de un cierre de paréntesis
             texto = texto.replaceAll("\\)", ") "); // Agregar un espacio antes de un cierre de paréntesis
@@ -71,11 +80,7 @@ public class analizadorPartTwo {
             texto = texto.replaceAll("\\[", " \\["); // Agregar un espacio antes de un inicio de corchete
             texto = texto.replaceAll("\\[", "\\[ "); // Agregar un espacio después de un inicio de corchete
             texto = texto.replaceAll("\\]", "\\] "); // Agregar un espacio después de un cierre de corchete
-            texto = texto.replaceAll("\\]", " \\]"); // Agregar un espacio antes de un cierre de corchete
-            texto = texto.replaceAll("=", "= "); // Agregar un espacio antes de un signo de igual
-            texto = texto.replaceAll("=", " ="); // Agregar un espacio antes de un signo de igual
-            texto = texto.replaceAll("==", "= "); // Agregar un espacio antes de un signo doble de igual
-            texto = texto.replaceAll("==", " ="); // Agregar un espacio antes de un signo doble de igual
+//            texto = texto.replaceAll("\\++", " ++");
 
             // Quitar tabulaciones
             texto = texto.replaceAll("\\t", " ");
@@ -174,7 +179,16 @@ public class analizadorPartTwo {
                                 validarLexemaFor(linea, tokens);
                                 break;
                             case "switch":
-
+                                validarLexemaSwitch(linea, tokens);
+                                break;
+                            case "inputS":
+                                validarLexemaInput(linea, tokens);
+                                break;
+                            case "inputI":
+                                validarLexemaInput(t, tokens);
+                                break;
+                            case "inputB":
+                                validarLexemaInput(t, tokens);
                                 break;
                         }
 //                        if(t.equals("int")){
@@ -448,14 +462,13 @@ public class analizadorPartTwo {
     //            System.out.println("Error en la linea []");
     //        }
     //    }
+    
+    // Acomodar lógica para validar el for (validar si las variables del for (i) son las mismas que la que se declaró al principio (int i = 0))
 
     static void validarLexemaFor(String l, String[] tokens) {
-        String varFor = "^\\s*for\\s*\\(\\s*[^;]*;\\s*[a-zA-Z_][a-zA-Z0-9_]*(\\s*[+\\-*/]\\s*[a-zA-Z0-9_]+)*\\s*(==|!=|<=|>=|<|>)\\s*[a-zA-Z0-9_]+\\s*;\\s*[^)]*\\)\\s*\\{[^}]*\\s*$";
-        for (int i = 0; i < 10; i++) {
-
-        }
+        String varFor = "^\\s*for\\s*\\(\\s*int\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*=\\s*\\d+\\s*;\\s*\\1\\s*(==|!=|<=|>=|<|>)\\s*\\d+\\s*;\\s*\\1\\s*(\\+\\+|--)\\s*\\)\\s*\\{\\s*$";
         if (l.matches(varFor)) {
-            boolean existe = true;
+            boolean existe = false;
             System.out.println(tokens[0]);
             System.out.println(tokens[1]);
             System.out.println(tokens[2]);
@@ -468,18 +481,125 @@ public class analizadorPartTwo {
                 }
             }
             if (!existe) {
-                    reservadas.add(new TABSIM(tokens[3], "variable", "0", "idx", reservadas.size()));
-                    tokens[3] = reservadas.get(reservadas.size()-1).idx + reservadas.get(reservadas.size()-1).id;
-                    System.out.println(tokens[3]);
-                }
+                reservadas.add(new TABSIM(tokens[3], "variable", "0", "idx", reservadas.size()));
+                tokens[3] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
+                System.out.println(tokens[3]);
+            }
             String valor = tokens[5];
             System.out.println(tokens[4]);
             reservadas.add(new TABSIM(tokens[5], "valor", valor, "idx", reservadas.size()));
             tokens[5] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
             System.out.println(tokens[5]);
+            System.out.println(tokens[6]);
+            for (int i = 0; i < reservadas.size(); i++) {
+                if (tokens[7].equals(reservadas.get(i).var)) {
+                    tokens[7] = reservadas.get(i).idx + reservadas.get(i).id;
+                    System.out.println(tokens[7]);
+                    existe = true;
+                    break;
+                }
+
+            }
+            if (!existe) {
+                System.out.println("Error: variable i no declarada");
+            }
+            System.out.println(tokens[8]);
+            existe = false;
+            for (int i = 0; i < reservadas.size(); i++) {
+                if (tokens[9].equals(reservadas.get(i).var)) {
+                    valor = tokens[9];
+                    reservadas.add(new TABSIM(tokens[9], "valor", valor, "idx", reservadas.size()));
+                    tokens[9] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
+                    System.out.println(tokens[9]);
+                    existe = true;
+                    break;
+                }
+            }
+            if (!existe) {
+                reservadas.add(new TABSIM(tokens[9], "valor", valor, "idx", reservadas.size()));
+                tokens[9] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
+                System.out.println(tokens[9]);
+            }
+            System.out.println(tokens[10]);
+            for (int i = 0; i < reservadas.size(); i++) {
+                if (tokens[11].equals(reservadas.get(i).var)) {
+                    tokens[11] = reservadas.get(i).idx + reservadas.get(i).id;
+                    System.out.println(tokens[11]);
+                    existe = true;
+                    break;
+                }
+            }
+            if (!existe) {
+                valor = tokens[11];
+                reservadas.add(new TABSIM(tokens[11], "valor", valor, "idx", reservadas.size()));
+                tokens[11] = reservadas.get(reservadas.size() - 1).idx + reservadas.get(reservadas.size() - 1).id;
+                System.out.println(tokens[11]);
+            }
+            System.out.println(tokens[12]);
+            System.out.println(tokens[13]);
 
         } else {
             System.out.println("Error: estructura for mal declarada");
+        }
+    }
+
+    static void validarLexemaSwitch(String l, String[] tokens) {
+        String varSwitch = "^\\s*switch\\s*\\(\\s*[a-zA-Z_][a-zA-Z0-9_]*\\s*\\)\\s*\\{\\s*$";
+        if (l.matches(varSwitch)) {
+            boolean existe = false;
+            System.out.println(tokens[0]);
+            System.out.println(tokens[1]);
+            for (int i = 0; i < reservadas.size(); i++) {
+                if (tokens[2].equals(reservadas.get(i).var) && reservadas.get(i).tipo.equals("variable")) {
+                    tokens[2] = reservadas.get(i).idx + reservadas.get(i).id;
+                    System.out.println(tokens[2]);
+                    existe = true;
+                    break;
+                }
+            }
+            if (!existe) {
+                System.out.println("Error: variable no declarada.");
+            }
+            System.out.println(tokens[3]);
+            System.out.println(tokens[4]);
+        } else {
+            System.out.println("Error: Línea de código no escrita correctamente.");
+        }
+
+    }
+
+    static void validarLexemaInput(String l, String[] tokens) {
+        String varInput = "^\\s*input(S|I|B)\\s*\\(\\s*[a-zA-Z_][a-zA-Z0-9_]*\\s*\\)\\s*;\\s*$";
+        if (l.matches(varInput)) {
+            boolean existe = false;
+            System.out.println(tokens[0]);
+            System.out.println(tokens[1]);
+            for (int i = 0; i < reservadas.size(); i++) {
+                if (tokens[2].equals(reservadas.get(i).var) && reservadas.get(i).tipo.equals("variable")) {
+                    tokens[2] = reservadas.get(i).idx + reservadas.get(i).id;
+                    System.out.println(tokens[2]);
+                    existe = true;
+                    break;
+                }
+            }
+            if (!existe) {
+                System.out.println("Error: variable no declarada.");
+            }
+            System.out.println(tokens[3]);
+            System.out.println(tokens[4]);
+        } else {
+            System.out.println("Error: línea de código no escrita correctamente.");
+        }
+    }
+
+    static void validarLexemaIf(String l, String[] tokens) {
+        String varIf = "^\\s*if\\s*\\(\\s*[a-zA-Z0-9_]+(\\s*[+\\-*/%]\\s*[a-zA-Z0-9_]+)*\\s*(==|!=|<=|>=|<|>)\\s*[a-zA-Z0-9_]+(\\s*(&&|\\|\\|)\\s*[a-zA-Z0-9_]+(\\s*[+\\-*/%]\\s*[a-zA-Z0-9_]+)*\\s*(==|!=|<=|>=|<|>)\\s*[a-zA-Z0-9_]+)*\\s*\\)\\s*\\{\\s*$";
+        if (l.matches(varIf)) {
+            boolean existe = false;
+            System.out.println(tokens[0]);
+
+        } else {
+            System.out.println("Error: línea de código no escrita correctamente.");
         }
     }
 
