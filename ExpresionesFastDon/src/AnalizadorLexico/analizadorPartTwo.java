@@ -59,7 +59,6 @@ public class analizadorPartTwo {
             // Quitar comentarios
             texto = texto.replaceAll("(?s)/\\*.*?\\*/", "");
             texto = texto.replaceAll("//.*", "");
-
             texto = texto.replaceAll("==", " == ");
             texto = texto.replaceAll("!=", " != ");
             texto = texto.replaceAll("<=", " <= ");
@@ -80,7 +79,7 @@ public class analizadorPartTwo {
             texto = texto.replaceAll("\\[", " \\["); // Agregar un espacio antes de un inicio de corchete
             texto = texto.replaceAll("\\[", "\\[ "); // Agregar un espacio después de un inicio de corchete
             texto = texto.replaceAll("\\]", "\\] "); // Agregar un espacio después de un cierre de corchete
-//            texto = texto.replaceAll("\\++", " ++");
+            texto = texto.replaceAll("\\++", " ++ ");
 
             // Quitar tabulaciones
             texto = texto.replaceAll("\\t", " ");
@@ -149,7 +148,7 @@ public class analizadorPartTwo {
                 System.out.println("Error: El archivo no se encuentra en la ruta: " + System.getProperty("user.dir")); // Dentro de este if, se valida si existe el archivo .txt en la ruta, si no existe se manda un error en consola junto con la ruta para que sea más fácil para el usuario solucionar el problema.
             } else {
                 BufferedReader br = new BufferedReader(new FileReader(archivo));
-                String linea;
+                String linea; 
                 while ((linea = br.readLine()) != null) {
 //                    System.out.println(linea);  // while para mostrar la  lectura de línea por línea el archivo limpio
                     String[] tokens = linea.split(" "); // Crear tokens del lexema (divide la cadena por cada espacio)
@@ -185,10 +184,10 @@ public class analizadorPartTwo {
                                 validarLexemaInput(linea, tokens);
                                 break;
                             case "inputI":
-                                validarLexemaInput(t, tokens);
+                                validarLexemaInput(linea, tokens);
                                 break;
                             case "inputB":
-                                validarLexemaInput(t, tokens);
+                                validarLexemaInput(linea, tokens);
                                 break;
                         }
 //                        if(t.equals("int")){
@@ -297,7 +296,7 @@ public class analizadorPartTwo {
 //                System.out.println("TOKEN AÑADIDO AL TABSIM");
 //            }
         } else {
-            System.out.println("Error: Línea de código no escrita corretamente.");
+            System.out.println("Error: variable int mal declarada.");
         }
     }
 
@@ -349,6 +348,8 @@ public class analizadorPartTwo {
             //            }
             //        } else {
             //            System.out.println("Error en la linea []");
+        }else{
+            System.out.println("Error: variable String mal declarada.");
         }
     }
 
@@ -400,6 +401,8 @@ public class analizadorPartTwo {
             //            }
             //        } else {
             //            System.out.println("Error en la linea []");
+        }else{
+            System.out.println("Error: variable booleana mal declarada.");
         }
     }
     //
@@ -563,7 +566,7 @@ public class analizadorPartTwo {
             System.out.println(tokens[3]);
             System.out.println(tokens[4]);
         } else {
-            System.out.println("Error: Línea de código no escrita correctamente.");
+            System.out.println("Error: estructura switch no escrita correctamente.");
         }
 
     }
@@ -588,7 +591,7 @@ public class analizadorPartTwo {
             System.out.println(tokens[3]);
             System.out.println(tokens[4]);
         } else {
-            System.out.println("Error: línea de código no escrita correctamente.");
+            System.out.println("Error: entrada de datos no escrita correctamente.");
         }
     }
 
