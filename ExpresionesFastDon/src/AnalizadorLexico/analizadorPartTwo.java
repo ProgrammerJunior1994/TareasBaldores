@@ -59,7 +59,6 @@ public class analizadorPartTwo {
             // Quitar comentarios
             texto = texto.replaceAll("(?s)/\\*.*?\\*/", "");
             texto = texto.replaceAll("//.*", "");
-
             texto = texto.replaceAll("==", " == ");
             texto = texto.replaceAll("!=", " != ");
             texto = texto.replaceAll("<=", " <= ");
@@ -149,7 +148,7 @@ public class analizadorPartTwo {
                 System.out.println("Error: El archivo no se encuentra en la ruta: " + System.getProperty("user.dir")); // Dentro de este if, se valida si existe el archivo .txt en la ruta, si no existe se manda un error en consola junto con la ruta para que sea más fácil para el usuario solucionar el problema.
             } else {
                 BufferedReader br = new BufferedReader(new FileReader(archivo));
-                String linea;
+                String linea; 
                 while ((linea = br.readLine()) != null) {
 //                    System.out.println(linea);  // while para mostrar la  lectura de línea por línea el archivo limpio
                     String[] tokens = linea.split(" "); // Crear tokens del lexema (divide la cadena por cada espacio)
@@ -185,10 +184,10 @@ public class analizadorPartTwo {
                                 validarLexemaInput(linea, tokens);
                                 break;
                             case "inputI":
-                                validarLexemaInput(t, tokens);
+                                validarLexemaInput(linea, tokens);
                                 break;
                             case "inputB":
-                                validarLexemaInput(t, tokens);
+                                validarLexemaInput(linea, tokens);
                                 break;
                         }
 //                        if(t.equals("int")){

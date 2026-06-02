@@ -140,7 +140,7 @@ public class ExpresionesFastDon {
                         case 1:
                             System.out.println("Ingresa una estructura if:");
                             String ifElse = sc.nextLine();
-                           String varIf = "^\\s*if\\s*\\(\\s*[a-zA-Z_][a-zA-Z0-9_]*(\\s*[+\\-*/%]\\s*[a-zA-Z0-9_]+)*\\s*(==|!=|<=|>=|<|>)\\s*[a-zA-Z0-9_]+(\\s*(&&|\\|\\|)\\s*[a-zA-Z_][a-zA-Z0-9_]*(\\s*[+\\-*/%]\\s*[a-zA-Z0-9_]+)*\\s*(==|!=|<=|>=|<|>)\\s*[a-zA-Z0-9_]+)*\\s*\\)\\s*\\{\\s*$";
+                           String varIf = "^\\s*if\\s*\\(\\s*[a-zA-Z_][a-zA-Z0-9_]+(\\s*[+\\-*/%]\\s*[a-zA-Z0-9_]+)*\\s*(==|!=|<=|>=|<|>)\\s*[a-zA-Z0-9_]+(\\s*(&&|\\|\\|)\\s*[a-zA-Z_][a-zA-Z0-9_]*(\\s*[+\\-*/%]\\s*[a-zA-Z0-9_]+)*\\s*(==|!=|<=|>=|<|>)\\s*[a-zA-Z0-9_]+)*\\s*\\)\\s*\\{\\s*$";
                             if (ifElse.matches(varIf)) {
                                 System.out.println("Declaración de estructura if válida");
 //                                error = false;
@@ -247,7 +247,7 @@ public class ExpresionesFastDon {
                     sc.nextLine();
                     System.out.println("Ingresa la clase main");
                     String main = sc.nextLine();
-                    String varMain = "^\\s*main\\s*\\(\\s*\\)\\s*\\{\\s*$";
+                    String varMain = "^\\s*main\\s*\\{\\s*$";
                     if (main.matches(varMain)) {
                         System.out.println("Declaracion de clase main válida");
 //                        error = false;
