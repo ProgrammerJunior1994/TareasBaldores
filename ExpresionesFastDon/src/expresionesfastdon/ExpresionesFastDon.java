@@ -195,7 +195,6 @@ public class ExpresionesFastDon {
                     sc.nextLine();
 
                     switch (opcER) {
-
                         case 1:
                             System.out.println("Ingresa una estructura for:");
                             String forE = sc.nextLine();
@@ -288,7 +287,7 @@ public class ExpresionesFastDon {
                         case 2:
                             System.out.println("Ingresa la estructura de salida:");
                             String print = sc.nextLine();
-                            String varPrint = "^\\s*print\\s*\\(\\s*.*\\s*\\)\\s*;\\s*$";
+                            String varPrint = "^\\s*print\\s*\\(\\s*.*\\s)\\s*;\\s*$";
                             if (print.matches(varPrint)) {
                                 System.out.println("Estructura de salida válida.");
 //                                error = false;
