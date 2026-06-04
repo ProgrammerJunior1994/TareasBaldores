@@ -7,6 +7,8 @@ int cantidad ;
 int edad = 21 ;
 int edad = 30 ;
 int ;
+int jaime ;
+int mindy ;
 String nombre ;
 String escuela = " tsj " ;
 boolean esta = true ;
@@ -30,6 +32,9 @@ inputB ( esverdadero ) ;
 inputI ( edad ) ;
 while ( opc == 30 ) {
 edad = 30 ;
+}
+for ( j ; j < 10 ; j ++ ) {
+Vanessa = 20 ;
 }
 print ( " La suma de los pares es : " ++ suma ) ;
 }

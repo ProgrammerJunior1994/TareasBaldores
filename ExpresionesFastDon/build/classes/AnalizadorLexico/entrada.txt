@@ -13,6 +13,8 @@
         int edad = 21;
         int edad = 30;
         int;
+        int jaime;
+        int mindy;
         String nombre;      // Variable nombre de tipo String (cadena de caracteres)
         String escuela = "tsj"; // Variable escuela de tipo String (cadena de caracteres)
         boolean esta = true;
@@ -53,6 +55,12 @@
         edad = 30;
 
         }
+
+        for(j; j<10; j++){
+
+        Vanessa = 20;
+
+}
 
         // Salida por consola: muestra el resultado final
         print("La suma de los pares es: " + suma);

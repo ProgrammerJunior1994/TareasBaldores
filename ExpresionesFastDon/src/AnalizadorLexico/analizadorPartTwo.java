@@ -130,6 +130,15 @@ public class analizadorPartTwo {
         reservadas.add(new TABSIM("==", "reservada", "0", "idx", 18));
         reservadas.add(new TABSIM("!", "reservada", "0", "idx", 19));
         reservadas.add(new TABSIM(";", "reservada", "0", "idx", 20));
+        reservadas.add(new TABSIM("switch", "reservada", "0", "idx", 21));
+        reservadas.add(new TABSIM("case", "reservada", "0", "idx", 22));
+        reservadas.add(new TABSIM("default", "reservada", "0", "idx", 23));
+        reservadas.add(new TABSIM("break", "reservada", "0", "idx", 24));
+        reservadas.add(new TABSIM("print", "reservada", "0", "idx", 25));
+        reservadas.add(new TABSIM("true", "reservada", "0", "idx", 26));
+        reservadas.add(new TABSIM("false", "reservada", "0", "idx", 27));
+        reservadas.add(new TABSIM("while", "reservada", "0", "idx", 28));
+
         // Declaración de elementos del TABSIM
 //        TABSIM entero = new TABSIM("int", "int", "0", 0);
 //        TABSIM cadena = new TABSIM("String", "String", "0", 1); //Primera prueba para la creación de elementos del TABSIM (buena idea pero puede ser mejor)
@@ -148,16 +157,18 @@ public class analizadorPartTwo {
                 System.out.println("Error: El archivo no se encuentra en la ruta: " + System.getProperty("user.dir")); // Dentro de este if, se valida si existe el archivo .txt en la ruta, si no existe se manda un error en consola junto con la ruta para que sea más fácil para el usuario solucionar el problema.
             } else {
                 BufferedReader br = new BufferedReader(new FileReader(archivo));
-                String linea; 
+                String linea;
                 while ((linea = br.readLine()) != null) {
 //                    System.out.println(linea);  // while para mostrar la  lectura de línea por línea el archivo limpio
                     String[] tokens = linea.split(" "); // Crear tokens del lexema (divide la cadena por cada espacio)
+                    boolean reconocida = false;
                     for (String t : tokens) {
 //                        System.out.println(t);  // for para mostrar los tokens (opcional mostrarlos, solo se muestran para pruebas)
                         switch (t) {
                             case "int":
 
                                 validarLexemaInt(linea, tokens);
+                                reconocida = true;
 //                                String varentera = "^\\s*int\\s+[a-zA-Z_][a-zA-Z0-9_]*(\\s*=\\s*-?\\d+)?\\s*;\\s*$";
 //                                if (linea.matches(varentera)) {
 //                                    // El lexema es válido
@@ -170,25 +181,29 @@ public class analizadorPartTwo {
                                 break;
                             case "String":
                                 validarLexemaString(linea, tokens);
+                                reconocida = true;
                                 break;
                             case "boolean":
                                 validarLexemaBoolean(linea, tokens);
+                                reconocida = true;
                                 break;
                             case "for":
                                 validarLexemaFor(linea, tokens);
+                                reconocida = true;
                                 break;
                             case "switch":
                                 validarLexemaSwitch(linea, tokens);
+                                reconocida = true;
                                 break;
                             case "inputS":
-                                validarLexemaInput(linea, tokens);
-                                break;
                             case "inputI":
-                                validarLexemaInput(linea, tokens);
-                                break;
                             case "inputB":
                                 validarLexemaInput(linea, tokens);
+                                reconocida = true;
                                 break;
+                            case "if":
+                                validarLexemaIf(linea, tokens);
+                                reconocida = true;
                         }
 //                        if(t.equals("int")){
 //                            String varentera = "^\\s*int\\s+[a-zA-Z_][a-zA-Z0-9_]*(\\s*=\\s*-?\\d+)?\\s*;\\s*$";
@@ -197,6 +212,9 @@ public class analizadorPartTwo {
 //                            } else {
 //                                System.out.println("Declaracion invalida.");
 //                            }
+                    }
+                    if (!reconocida) {
+                        validarVariables(linea, tokens);
                     }
                 }
                 br.close();
@@ -348,7 +366,7 @@ public class analizadorPartTwo {
             //            }
             //        } else {
             //            System.out.println("Error en la linea []");
-        }else{
+        } else {
             System.out.println("Error: variable String mal declarada.");
         }
     }
@@ -401,7 +419,7 @@ public class analizadorPartTwo {
             //            }
             //        } else {
             //            System.out.println("Error en la linea []");
-        }else{
+        } else {
             System.out.println("Error: variable booleana mal declarada.");
         }
     }
@@ -465,9 +483,8 @@ public class analizadorPartTwo {
     //            System.out.println("Error en la linea []");
     //        }
     //    }
-    
-    // Acomodar lógica para validar el for (validar si las variables del for (i) son las mismas que la que se declaró al principio (int i = 0))
 
+    // Acomodar lógica para validar el for (validar si las variables del for (i) son las mismas que la que se declaró al principio (int i = 0))
     static void validarLexemaFor(String l, String[] tokens) {
         String varFor = "^\\s*for\\s*\\(\\s*int\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*=\\s*\\d+\\s*;\\s*\\1\\s*(==|!=|<=|>=|<|>)\\s*\\d+\\s*;\\s*\\1\\s*(\\+\\+|--)\\s*\\)\\s*\\{\\s*$";
         if (l.matches(varFor)) {
@@ -600,10 +617,53 @@ public class analizadorPartTwo {
         if (l.matches(varIf)) {
             boolean existe = false;
             System.out.println(tokens[0]);
+            System.out.println(tokens[1]);
+            for (int i = 2; i < tokens.length; i++) {
+                if (tokens[i].equals(")")) {
+                    break;
+                }
+                for (int j = 0; j < reservadas.size(); j++) {
+                    if (tokens[i].equals(reservadas.get(j).var)) {
+                        tokens[i] = reservadas.get(j).idx + reservadas.get(j).id;
+                        System.out.println(tokens[i]);
+                        break;
+                    }
+                }
+            }
 
         } else {
             System.out.println("Error: línea de código no escrita correctamente.");
         }
     }
 
+    static void validarVariables(String l, String[] tokens) {
+        boolean dentroCadena = false;
+        for (String token : tokens) {
+
+            if (token.contains("\"")) {
+                dentroCadena = !dentroCadena;
+                continue;
+            }
+            if (dentroCadena) {
+                continue;
+            }
+            if (token.matches("[a-zA-Z_][a-zA-Z0-9_]*")) {
+                boolean existe = false;
+                for (TABSIM t : reservadas) {
+                    if (token.equals(t.var)) {
+                        existe = true;
+                        break;
+                    }
+                }
+                if (!existe) {
+                    System.out.println(
+                            "Error: variable no declarada -> "
+                            + token
+                    );
+                }
+            }
+        }
+    }
+
+//    static void validar
 }
