@@ -38,6 +38,8 @@ public class AnalizadorSemantico {
     private Stack<String> pilaSem = new Stack<>();
     private Map<Integer, Map<String, String>> tabla = new HashMap<>();
     private Map<String, String> tablaTipos = new HashMap<>(); // id ? tipo
+    
+    
 
     // Convierte variables a IDs y guarda su tipo
     public void registrarVariable(String nombre, String tipo) {
@@ -69,6 +71,33 @@ public class AnalizadorSemantico {
     public void parse(List<String> entrada) {
         pilaEstados.push(0);
         pilaSem.push("_");
+        // Registro de los productos
+        Map<Integer, Produccion> producciones = new HashMap<>();
+
+        producciones.put(1, new Produccion("A", Arrays.asList("A", "||", "B")));
+        producciones.put(2, new Produccion("A", Arrays.asList("B")));
+        producciones.put(3, new Produccion("B", Arrays.asList("B", "&&", "R")));
+        producciones.put(4, new Produccion("B", Arrays.asList("R")));
+        producciones.put(5, new Produccion("R", Arrays.asList("R", "==", "C")));
+        producciones.put(6, new Produccion("R", Arrays.asList("R", "!=", "C")));
+        producciones.put(7, new Produccion("R", Arrays.asList("R", ">", "C")));
+        producciones.put(8, new Produccion("R", Arrays.asList("R", "<", "C")));
+        producciones.put(9, new Produccion("R", Arrays.asList("R", ">=", "C")));
+        producciones.put(10, new Produccion("R", Arrays.asList("R", "<=", "C")));
+        producciones.put(11, new Produccion("R", Arrays.asList("C")));
+        producciones.put(12, new Produccion("C", Arrays.asList("C", "+", "D")));
+        producciones.put(13, new Produccion("C", Arrays.asList("C", "-", "D")));
+        producciones.put(14, new Produccion("C", Arrays.asList("D")));
+        producciones.put(15, new Produccion("D", Arrays.asList("D", "*", "E")));
+        producciones.put(16, new Produccion("D", Arrays.asList("D", "/", "E")));
+        producciones.put(17, new Produccion("D", Arrays.asList("D", "%", "E")));
+        producciones.put(18, new Produccion("D", Arrays.asList("E")));
+        producciones.put(19, new Produccion("E", Arrays.asList("F", "**", "E")));
+        producciones.put(20, new Produccion("E", Arrays.asList("F")));
+        producciones.put(21, new Produccion("F", Arrays.asList("!", "F")));
+        producciones.put(22, new Produccion("F", Arrays.asList("(", "A", ")")));
+        producciones.put(23, new Produccion("F", Arrays.asList("id")));
+
 
         int i = 0;
         while (i < entrada.size()) {
@@ -89,8 +118,25 @@ public class AnalizadorSemantico {
                 i++;
             } else if (accion.startsWith("r")) { // reducción
                 int prod = Integer.parseInt(accion.substring(1));
-                
-                
+                Produccion p = producciones.get(prod);
+
+                System.out.println("Reduciendo con: " + p);
+
+// Quitar |p.derecha| símbolos de la pila de estados y semántica
+                for (int j = 0; j < p.derecha.size(); j++) {
+                    pilaEstados.pop();
+                    pilaSem.pop();
+                }
+
+// Empujar el no terminal izquierdo
+                pilaSem.push(p.izquierda);
+
+// Buscar el GOTO en la tabla
+                int estadoActual = pilaEstados.peek();
+                String gotoAccion = tabla.get(estadoActual).get(p.izquierda);
+                int nuevoEstado = Integer.parseInt(gotoAccion);
+                pilaEstados.push(nuevoEstado);
+
             } else if (accion.equals("acc")) {
                 System.out.println("Cadena aceptada");
                 return;
@@ -109,18 +155,19 @@ public class AnalizadorSemantico {
             System.out.println("Pila semántica: " + pilaSem);
         }
     }
-    public void mostrarTabla() {
-    for (Map.Entry<Integer, Map<String, String>> fila : tabla.entrySet()) {
-        int estado = fila.getKey();
-        Map<String, String> acciones = fila.getValue();
 
-        System.out.print("Estado " + estado + ": ");
-        for (Map.Entry<String, String> celda : acciones.entrySet()) {
-            System.out.print(celda.getKey() + "=" + celda.getValue() + " | ");
+    public void mostrarTabla() {
+        for (Map.Entry<Integer, Map<String, String>> fila : tabla.entrySet()) {
+            int estado = fila.getKey();
+            Map<String, String> acciones = fila.getValue();
+
+            System.out.print("Estado " + estado + ": ");
+            for (Map.Entry<String, String> celda : acciones.entrySet()) {
+                System.out.print(celda.getKey() + "=" + celda.getValue() + " | ");
+            }
+            System.out.println();
         }
-        System.out.println();
     }
-}
 
     public static void main(String[] args) throws IOException {
         reservadas.add(new TABSIM("int", "reservada", "0", "idx", 0));
@@ -142,7 +189,7 @@ public class AnalizadorSemantico {
         parser.mostrarTabla();
 
         // Ejemplo de entrada: id0 + id1 $
-        List<String> entrada = Arrays.asList("(","id", "+", "id",")", "$");
+        List<String> entrada = Arrays.asList("(", "id", "+", "id", ")", "$");
         parser.parse(entrada);
     }
 
