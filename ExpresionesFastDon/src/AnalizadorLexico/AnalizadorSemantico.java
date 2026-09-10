@@ -89,7 +89,8 @@ public class AnalizadorSemantico {
                 i++;
             } else if (accion.startsWith("r")) { // reducción
                 int prod = Integer.parseInt(accion.substring(1));
-                // aplicar producción semántica
+                
+                
             } else if (accion.equals("acc")) {
                 System.out.println("Cadena aceptada");
                 return;
@@ -108,6 +109,18 @@ public class AnalizadorSemantico {
             System.out.println("Pila semántica: " + pilaSem);
         }
     }
+    public void mostrarTabla() {
+    for (Map.Entry<Integer, Map<String, String>> fila : tabla.entrySet()) {
+        int estado = fila.getKey();
+        Map<String, String> acciones = fila.getValue();
+
+        System.out.print("Estado " + estado + ": ");
+        for (Map.Entry<String, String> celda : acciones.entrySet()) {
+            System.out.print(celda.getKey() + "=" + celda.getValue() + " | ");
+        }
+        System.out.println();
+    }
+}
 
     public static void main(String[] args) throws IOException {
         reservadas.add(new TABSIM("int", "reservada", "0", "idx", 0));
@@ -126,9 +139,10 @@ public class AnalizadorSemantico {
 
         // Cargar tabla desde archivo CSV
         parser.cargarTabla("src/AnalizadorLexico/GFastDon.csv", simbolos);
+        parser.mostrarTabla();
 
         // Ejemplo de entrada: id0 + id1 $
-        List<String> entrada = Arrays.asList("id", "+", "id", "$");
+        List<String> entrada = Arrays.asList("(","id", "+", "id",")", "$");
         parser.parse(entrada);
     }
 
