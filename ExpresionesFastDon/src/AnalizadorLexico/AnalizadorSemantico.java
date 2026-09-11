@@ -38,7 +38,7 @@ public class AnalizadorSemantico {
     private Stack<String> pilaSem = new Stack<>();
     private Map<Integer, Map<String, String>> tabla = new HashMap<>();
     private Map<String, String> tablaTipos = new HashMap<>(); // id ? tipo
-    private Map<String, String> nombresAId = new HashMap<>();
+    private Map<String, String> nombresAId = new HashMap<>(); // guarda los ids de las variables
     private List<String> tiposEntrada = new ArrayList<>();
     
     
@@ -150,6 +150,27 @@ public class AnalizadorSemantico {
         return String.join(" ", entrada.subList(posicion, entrada.size()));
     }
 
+    private String celda(String valor, int ancho) {
+        if (valor == null) {
+            valor = "";
+        }
+        if (valor.length() > ancho) {
+            return valor.substring(0, ancho - 3) + "...";
+        }
+        return String.format("%-" + ancho + "s", valor);
+    }
+
+    private void imprimirFila(String paso, String entrada, String accion,
+            String estados, String pila) {
+        System.out.printf("| %s | %s | %s | %s | %s |%n",
+                celda(paso, 6), celda(entrada, 48), celda(accion, 58),
+                celda(estados, 34), celda(pila, 80));
+    }
+
+    private void imprimirSeparador() {
+        System.out.println("+--------+--------------------------------------------------+------------------------------------------------------------+------------------------------------+----------------------------------------------------------------------------------+");
+    }
+
     private void mostrarTokens(List<String> entrada) {
         StringBuilder salida = new StringBuilder();
         for (int posicion = 0; posicion < entrada.size(); posicion++) {
@@ -256,7 +277,7 @@ public class AnalizadorSemantico {
         System.out.println("Tabla LR cargada con " + tabla.size() + " estados.");
     }
 
-    // Simulaci�n del parser
+    // Simulacion del parser
     public void parse(List<String> entrada) {
         pilaEstados.clear();
         pilaSem.clear();
@@ -294,10 +315,9 @@ public class AnalizadorSemantico {
         int paso = 1;
         System.out.println();
         System.out.println("================ TRAZA DEL ANALISIS ================");
-        System.out.printf("%-5s %-24s %-30s %-20s %s%n",
-            "Paso", "Entrada pendiente", "Accion", "Estados", "Pila semantica");
-        System.out.println("-----------------------------------------------------"
-            + "-----------------------------------------------");
+        imprimirSeparador();
+        imprimirFila("Paso", "Entrada pendiente", "Accion", "Estados", "Pila semantica");
+        imprimirSeparador();
         while (i < entrada.size()) {
             int estado = pilaEstados.peek();
             String simbolo = entrada.get(i);
@@ -358,8 +378,8 @@ public class AnalizadorSemantico {
                 }
             }
 
-            System.out.printf("%-5d %-24s %-30s %-20s %s%n", paso,
-                    entradaPendiente(entrada, i), descripcion, pilaEstados, pilaSemanticaComoTexto());
+                imprimirFila(String.valueOf(paso), entradaPendiente(entrada, i),
+                    descripcion, pilaEstados.toString(), pilaSemanticaComoTexto());
             paso++;
         }
     }
@@ -403,7 +423,7 @@ public class AnalizadorSemantico {
         try {
             List<String> entrada = parser.tokenizarEntrada(expresion);
             System.out.println();
-            System.out.println("================ ENTRADA =================");
+            System.out.println("=========================== ENTRADA ===========================");
             System.out.println("Original: " + expresion);
             parser.mostrarTokens(entrada);
             parser.parse(entrada);
