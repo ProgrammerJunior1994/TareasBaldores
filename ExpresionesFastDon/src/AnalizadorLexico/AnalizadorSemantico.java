@@ -1,32 +1,23 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package AnalizadorLexico;
 
 import static AnalizadorLexico.analizadorPartTwo.reservadas;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 
 /**
+ * Analizador semántico con generación de código intermedio (triplos)
+ * y código ensamblador usando una pila ensambladora (pila_em).
+ *
+ * Reglas de la pila_em:
+ *  - Inicia con "_" (igual que la pila semántica).
+ *  - Desplazamiento de id/variable -> push(idxx)  (se usa el id interno).
+ *  - Desplazamiento de operador/paréntesis -> push(símbolo).
+ *  - Reducción de operación -> pop operandos+operador, push(tN) y triplo.
+ *  - Reducción unitaria -> sin cambio.
+ *  - Reducción de paréntesis -> quita ( y ), conserva el valor.
  *
  * @author Jaime Ramirez
- */
-
-/*
-primero se debe ingresar el ejercicio a evalualar 
-depues las variables se convierten en ids por ejemplo x = id0
-se inica la pila en 0, despues se evalua el valor de la pila con el simbolo del ejecicio ejem
-0 -> ( se busca en la tabla si es una reduccion o un desplazamiento, en cada reduccion o desplazamiento se cambia el valor de la pila
-con los desplazamientos se aï¿½ade el valor del desplazamiento ejem d5 -> pila 0 + 5
-y con las reducciones se identifica el valor con eso se sabe cuantos digitos se debe recorrer la pila por ejem
-r -> t esto quiere decir que se debe recorer una pocision ( si la pila esta como 05 entonces se debe recorrer hasta el cero)
-una vez obtenido el valor en el que quedo se evalua con el simbolo ejem 0 con ( y se identifica la siguiente operacion para contuinar...
-En la pila-sem la pila empieza con un espacio vacio (_), por cada desplazamiento se aï¿½ade un espacio vacio a la pila, con cada reduccion se evalua dos casos
-en el primero es cuando se hace una reduccion de un operador entonces pasa igual y cuando se le hace a un id se obtiene el tipo del dato ( int, string, boolean)
-despues se pone en la pila ejem se hace una reduccion de un entero en la pila quedaria algo asi _I y por ultimo si se hace una reduccion y tiene una operacion
-se evalua ejem tenemos en la pila _I_I y la reduccion es tal que esta R -> R + T ( se haria la suma) entonces se obtiene los tipos de datos que en este caso ambos
-son enteros se hace una suma de enteros, en caso de que se tenga que hacer una operacion de distintos tipos se debe imprimir que ha ocurrido un error semantico.
  */
 public class AnalizadorSemantico {
 
@@ -34,27 +25,74 @@ public class AnalizadorSemantico {
 
     // Pila de estados
     private Stack<Integer> pilaEstados = new Stack<>();
-    // Pila semï¿½ntica
+    // Pila semántica
     private Stack<String> pilaSem = new Stack<>();
-    private Map<Integer, Map<String, String>> tabla = new HashMap<>();
-    private Map<String, String> tablaTipos = new HashMap<>(); // id ? tipo
-    private Map<String, String> nombresAId = new HashMap<>(); // guarda los ids de las variables
-    private List<String> tiposEntrada = new ArrayList<>();
-    
-    
+    // Pila ensambladora (operandos / temporales / operadores)
+    private Stack<String> pilaEm = new Stack<>();
+    // Contador de temporales
+    private int contadorTemporales = 0;
+    // Lista de triplos generados: (op, op1, op2, resultado)
+    private List<String[]> triplos = new ArrayList<>();
+    // Código ensamblador generado a partir de los triplos
+    private List<String> codigoEnsamblador = new ArrayList<>();
 
-    // Convierte variables a IDs y guarda su tipo
+    private Map<Integer, Map<String, String>> tabla = new HashMap<>();
+    private Map<String, String> tablaTipos = new HashMap<>();      // idxx -> tipo
+    private Map<String, String> nombresAId = new HashMap<>();      // variable -> idxx
+    private Map<String, String> literalesAId = new HashMap<>();    // literal  -> idxx
+    private Map<String, String> idAOriginal = new HashMap<>();     // idxx -> nombre legible
+
+    private List<String> tiposEntrada = new ArrayList<>();
+    private List<String> lexemasEntrada = new ArrayList<>();
+
+    // ---------------------------------------------------------------
+    // Registro de variables
+    // ---------------------------------------------------------------
     public void registrarVariable(String nombre, String tipo) {
         String id = "id" + tablaTipos.size();
         tablaTipos.put(id, tipo);
         nombresAId.put(nombre, id);
+        idAOriginal.put(id, nombre);
         System.out.println("Variable " + nombre + " registrada como " + id + " de tipo " + tipo);
     }
 
-    /** Convierte la expresion escrita por el usuario a los simbolos de la tabla LR. */
+    /**
+     * Devuelve el idxx asociado a un literal (3, true, false, ...).
+     * Si no existe, lo crea dinámicamente.
+     */
+    private String idDeLiteral(String literal) {
+        String existente = literalesAId.get(literal);
+        if (existente != null) {
+            return existente;
+        }
+        String id = "id" + tablaTipos.size();
+        String tipo = "int";
+        if (literal.equals("true") || literal.equals("false")) {
+            tipo = "boolean";
+        }
+        tablaTipos.put(id, tipo);
+        literalesAId.put(literal, id);
+        idAOriginal.put(id, literal);
+        return id;
+    }
+
+    /**
+     * Obtiene el idxx interno para un lexema (variable o literal).
+     */
+    private String idInternoDeLexema(String lexema) {
+        if (nombresAId.containsKey(lexema)) {
+            return nombresAId.get(lexema);
+        }
+        return idDeLiteral(lexema);
+    }
+
+    // ---------------------------------------------------------------
+    // Tokenización
+    // ---------------------------------------------------------------
     public List<String> tokenizarEntrada(String expresion) {
         List<String> tokens = new ArrayList<>();
         tiposEntrada.clear();
+        lexemasEntrada.clear();
         int posicion = 0;
         while (posicion < expresion.length()) {
             char actual = expresion.charAt(posicion);
@@ -67,6 +105,7 @@ public class AnalizadorSemantico {
             if (operador != null) {
                 tokens.add(operador);
                 tiposEntrada.add(operador);
+                lexemasEntrada.add(operador);
                 posicion += operador.length();
                 continue;
             }
@@ -74,6 +113,7 @@ public class AnalizadorSemantico {
             if (actual == '$') {
                 tokens.add("$");
                 tiposEntrada.add("$");
+                lexemasEntrada.add("$");
                 posicion++;
                 continue;
             }
@@ -90,9 +130,11 @@ public class AnalizadorSemantico {
                     tablaTipos.putIfAbsent(lexema, "boolean");
                     tokens.add("id");
                     tiposEntrada.add("boolean");
+                    lexemasEntrada.add(lexema);
                 } else if (nombresAId.containsKey(lexema)) {
                     tokens.add("id");
                     tiposEntrada.add(tablaTipos.get(nombresAId.get(lexema)));
+                    lexemasEntrada.add(lexema);
                 } else {
                     throw new IllegalArgumentException("Variable no registrada: " + lexema);
                 }
@@ -108,6 +150,7 @@ public class AnalizadorSemantico {
                 tablaTipos.putIfAbsent(literal, "int");
                 tokens.add("id");
                 tiposEntrada.add("int");
+                lexemasEntrada.add(literal);
                 continue;
             }
 
@@ -116,6 +159,7 @@ public class AnalizadorSemantico {
         if (tokens.isEmpty() || !tokens.get(tokens.size() - 1).equals("$")) {
             tokens.add("$");
             tiposEntrada.add("$");
+            lexemasEntrada.add("$");
         }
         return tokens;
     }
@@ -130,6 +174,9 @@ public class AnalizadorSemantico {
         return null;
     }
 
+    // ---------------------------------------------------------------
+    // Utilidades de pila semántica / ensambladora (sin '|')
+    // ---------------------------------------------------------------
     private String tipoDeValor(String valor) {
         int separador = valor.indexOf(':');
         return separador >= 0 ? valor.substring(separador + 1) : valor;
@@ -140,7 +187,11 @@ public class AnalizadorSemantico {
     }
 
     private String pilaSemanticaComoTexto() {
-        return String.join(" | ", pilaSem);
+        return String.join(" ", pilaSem);
+    }
+
+    private String pilaEnsambladoraComoTexto() {
+        return String.join(" ", pilaEm);
     }
 
     private String entradaPendiente(List<String> entrada, int posicion) {
@@ -161,14 +212,15 @@ public class AnalizadorSemantico {
     }
 
     private void imprimirFila(String paso, String entrada, String accion,
-            String estados, String pila) {
-        System.out.printf("| %s | %s | %s | %s | %s |%n",
-                celda(paso, 6), celda(entrada, 48), celda(accion, 58),
-                celda(estados, 34), celda(pila, 80));
+            String estados, String pilaSem, String pilaEm) {
+        System.out.printf("| %s | %s | %s | %s | %s | %s |%n",
+                celda(paso, 6), celda(entrada, 34), celda(accion, 48),
+                celda(estados, 28), celda(pilaSem, 50), celda(pilaEm, 50));
     }
 
     private void imprimirSeparador() {
-        System.out.println("+--------+--------------------------------------------------+------------------------------------------------------------+------------------------------------+----------------------------------------------------------------------------------+");
+        System.out.println("+--------+------------------------------------+--------------------------------------------------+------------------------------+"
+                + "----------------------------------------------------+----------------------------------------------------+");
     }
 
     private void mostrarTokens(List<String> entrada) {
@@ -185,6 +237,9 @@ public class AnalizadorSemantico {
         System.out.println("Tokens: " + salida.toString().trim());
     }
 
+    // ---------------------------------------------------------------
+    // Validación semántica de tipos
+    // ---------------------------------------------------------------
     private String tipoDeReduccion(int numero, List<String> valores) {
         String izquierdo;
         switch (numero) {
@@ -258,7 +313,133 @@ public class AnalizadorSemantico {
         }
     }
 
-    // Cargar tabla LR desde CSV
+    // ---------------------------------------------------------------
+    // Pila ensambladora: manipulación según el tipo de reducción
+    // ---------------------------------------------------------------
+    private boolean esOperacion(int produccion) {
+        switch (produccion) {
+            case 1: case 3: case 5: case 6: case 7: case 8: case 9: case 10:
+            case 12: case 13: case 15: case 16: case 17: case 19: case 21:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private String operadorDeProduccion(int produccion) {
+        switch (produccion) {
+            case 1:  return "||";
+            case 3:  return "&&";
+            case 5:  return "==";
+            case 6:  return "!=";
+            case 7:  return ">";
+            case 8:  return "<";
+            case 9:  return ">=";
+            case 10: return "<=";
+            case 12: return "+";
+            case 13: return "-";
+            case 15: return "*";
+            case 16: return "/";
+            case 17: return "%";
+            case 19: return "**";
+            case 21: return "!";
+            default: return null;
+        }
+    }
+
+    private String instruccionEnsamblador(int produccion) {
+        switch (produccion) {
+            case 1: return "OR";
+            case 3: return "AND";
+            case 5: return "EQ";
+            case 6: return "NE";
+            case 7: return "GT";
+            case 8: return "LT";
+            case 9: return "GE";
+            case 10: return "LE";
+            case 12: return "ADD";
+            case 13: return "SUB";
+            case 15: return "MUL";
+            case 16: return "DIV";
+            case 17: return "MOD";
+            case 19: return "POW";
+            case 21: return "NOT";
+            default: return null;
+        }
+    }
+
+    private String nuevoTemporal() {
+        contadorTemporales++;
+        return "t" + contadorTemporales;
+    }
+
+    /**
+     * Actualiza la pila_em al reducir una producción.
+     *
+     * @param produccion número de producción
+     * @param idInterno  idxx del id desplazado (solo se usa en r23)
+     * @return descripción de la acción realizada en la pila_em
+     */
+    private String actualizarPilaEm(int produccion, String idInterno) {
+        // F -> id  (r23)
+        if (produccion == 23) {
+            pilaEm.push(idInterno);
+            return "push(" + idInterno + ")";
+        }
+
+        // F -> ( A )  (r22)
+        if (produccion == 22) {
+            pilaEm.pop();                 // ')'
+            String valor = pilaEm.pop();  // A (ya es idxx o temporal)
+            pilaEm.pop();                 // '('
+            pilaEm.push(valor);
+            return "quita ( ), conserva " + valor;
+        }
+
+        // Operaciones reales
+        if (esOperacion(produccion)) {
+            String op = operadorDeProduccion(produccion);
+            String temp = nuevoTemporal();
+
+            if (produccion == 21) { // !F  -> unario
+                String op1 = pilaEm.pop(); // F
+                pilaEm.pop();              // '!'
+                pilaEm.push(temp);
+                triplos.add(new String[]{op, op1, "-", temp});
+                codigoEnsamblador.add("LOAD " + nombreLegible(op1));
+                codigoEnsamblador.add("NOT");
+                codigoEnsamblador.add("STORE " + temp);
+                return "triplo (" + op + ", " + op1 + ", -, " + temp + ") push(" + temp + ")";
+            }
+
+            // Binarias: op1 op op2
+            String op2 = pilaEm.pop();
+            pilaEm.pop();               // operador
+            String op1 = pilaEm.pop();
+            pilaEm.push(temp);
+
+            triplos.add(new String[]{op, op1, op2, temp});
+            codigoEnsamblador.add("LOAD " + nombreLegible(op1));
+            codigoEnsamblador.add(instruccionEnsamblador(produccion) + " " + nombreLegible(op2));
+            codigoEnsamblador.add("STORE " + temp);
+            return "triplo (" + op + ", " + op1 + ", " + op2 + ", " + temp + ") push(" + temp + ")";
+        }
+
+        // Reducciones unitarias: A->B, B->R, R->C, C->D, D->E, E->F
+        return "unitaria (pila_em sin cambios)";
+    }
+
+    /**
+     * Traduce un idxx a su nombre legible para el ensamblador.
+     * Si no existe (por ejemplo un temporal), se deja igual.
+     */
+    private String nombreLegible(String idxx) {
+        return idAOriginal.getOrDefault(idxx, idxx);
+    }
+
+    // ---------------------------------------------------------------
+    // Carga de tabla LR
+    // ---------------------------------------------------------------
     public void cargarTabla(String archivoCSV, List<String> simbolos) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(archivoCSV))) {
             String linea;
@@ -277,24 +458,34 @@ public class AnalizadorSemantico {
         System.out.println("Tabla LR cargada con " + tabla.size() + " estados.");
     }
 
-    // Simulacion del parser
-    public void parse(List<String> entrada) {
+    // ---------------------------------------------------------------
+    // Parser LR con generación de triplos y ensamblador
+    // ---------------------------------------------------------------
+    public void parse(List<String> entrada) throws IOException {
+        Files.deleteIfExists(new File("codigo_ensamblador.asm").toPath());
+        Files.deleteIfExists(new File("codigo_intermedio.txt").toPath());
+
         pilaEstados.clear();
         pilaSem.clear();
+        pilaEm.clear();
+        triplos.clear();
+        codigoEnsamblador.clear();
+        contadorTemporales = 0;
+
         pilaEstados.push(0);
         pilaSem.push("_");
-        // Registro de los productos
-        Map<Integer, Produccion> producciones = new HashMap<>();
+        pilaEm.push("_");   // <-- pila_em inicia con _
 
-        producciones.put(1, new Produccion("A", Arrays.asList("A", "||", "B")));
-        producciones.put(2, new Produccion("A", Arrays.asList("B")));
-        producciones.put(3, new Produccion("B", Arrays.asList("B", "&&", "R")));
-        producciones.put(4, new Produccion("B", Arrays.asList("R")));
-        producciones.put(5, new Produccion("R", Arrays.asList("R", "==", "C")));
-        producciones.put(6, new Produccion("R", Arrays.asList("R", "!=", "C")));
-        producciones.put(7, new Produccion("R", Arrays.asList("R", ">", "C")));
-        producciones.put(8, new Produccion("R", Arrays.asList("R", "<", "C")));
-        producciones.put(9, new Produccion("R", Arrays.asList("R", ">=", "C")));
+        Map<Integer, Produccion> producciones = new HashMap<>();
+        producciones.put(1,  new Produccion("A", Arrays.asList("A", "||", "B")));
+        producciones.put(2,  new Produccion("A", Arrays.asList("B")));
+        producciones.put(3,  new Produccion("B", Arrays.asList("B", "&&", "R")));
+        producciones.put(4,  new Produccion("B", Arrays.asList("R")));
+        producciones.put(5,  new Produccion("R", Arrays.asList("R", "==", "C")));
+        producciones.put(6,  new Produccion("R", Arrays.asList("R", "!=", "C")));
+        producciones.put(7,  new Produccion("R", Arrays.asList("R", ">", "C")));
+        producciones.put(8,  new Produccion("R", Arrays.asList("R", "<", "C")));
+        producciones.put(9,  new Produccion("R", Arrays.asList("R", ">=", "C")));
         producciones.put(10, new Produccion("R", Arrays.asList("R", "<=", "C")));
         producciones.put(11, new Produccion("R", Arrays.asList("C")));
         producciones.put(12, new Produccion("C", Arrays.asList("C", "+", "D")));
@@ -310,18 +501,17 @@ public class AnalizadorSemantico {
         producciones.put(22, new Produccion("F", Arrays.asList("(", "A", ")")));
         producciones.put(23, new Produccion("F", Arrays.asList("id")));
 
-
         int i = 0;
         int paso = 1;
         System.out.println();
         System.out.println("================ TRAZA DEL ANALISIS ================");
         imprimirSeparador();
-        imprimirFila("Paso", "Entrada pendiente", "Accion", "Estados", "Pila semantica");
+        imprimirFila("Paso", "Entrada pendiente", "Accion", "Estados", "Pila semantica", "Pila ensambladora");
         imprimirSeparador();
+
         while (i < entrada.size()) {
             int estado = pilaEstados.peek();
             String simbolo = entrada.get(i);
-
             String accion = tabla.getOrDefault(estado, new HashMap<>()).get(simbolo);
 
             if (accion == null) {
@@ -331,26 +521,55 @@ public class AnalizadorSemantico {
             }
 
             String descripcion;
-            if (accion.startsWith("d")) { // desplazamiento
+
+            if (accion.startsWith("d")) {
+                // ---------- DESPLAZAMIENTO ----------
                 int nuevoEstado = Integer.parseInt(accion.substring(1));
                 pilaEstados.push(nuevoEstado);
                 String tipo = simbolo.equals("id") && i < tiposEntrada.size()
                         ? tiposEntrada.get(i) : simbolo;
                 pilaSem.push(valorTipado(simbolo, tipo));
-                descripcion = "DESPLAZA " + accion + " con " + valorTipado(simbolo, tipo);
+
+                if (simbolo.equals("id")) {
+                    // Se apila el idxx (id interno) en la pila_em
+                    String lexema = lexemasEntrada.get(i);
+                    String idInterno = idInternoDeLexema(lexema);
+                    pilaEm.push(idInterno);
+                    descripcion = "DESPLAZA " + accion + " con " + valorTipado(simbolo, tipo)
+                            + " -> pila_em.push(" + idInterno + ")";
+                } else {
+                    // Operadores y paréntesis se apilan tal cual
+                    pilaEm.push(simbolo);
+                    descripcion = "DESPLAZA " + accion + " con " + valorTipado(simbolo, tipo)
+                            + " -> pila_em.push(" + simbolo + ")";
+                }
                 i++;
-            } else if (accion.startsWith("r")) { // reducciï¿½n
+
+            } else if (accion.startsWith("r")) {
+                // ---------- REDUCCIÓN ----------
                 int prod = Integer.parseInt(accion.substring(1));
                 Produccion p = producciones.get(prod);
+
                 List<String> valores = new ArrayList<>();
                 for (int j = 0; j < p.derecha.size(); j++) {
                     pilaEstados.pop();
                     valores.add(0, pilaSem.pop());
                 }
+
+                // idxx del id desplazado (solo para r23)
+                String idInterno = null;
+                if (prod == 23) {
+                    String lexema = lexemasEntrada.get(i - 1);
+                    idInterno = idInternoDeLexema(lexema);
+                }
+
                 try {
                     String tipo = tipoDeReduccion(prod, valores);
                     pilaSem.push(valorTipado(p.izquierda, tipo));
-                    descripcion = String.format("REDUCE r%-2d %-18s => %s", prod, p, tipo);
+
+                    String accionEm = actualizarPilaEm(prod, idInterno);
+                    descripcion = String.format("REDUCE r%-2d %-18s => %s | pila_em: %s",
+                            prod, p, tipo, accionEm);
                 } catch (IllegalArgumentException error) {
                     System.out.printf("Paso %-2d Error semantico: %s%n", paso, error.getMessage());
                     return;
@@ -362,12 +581,14 @@ public class AnalizadorSemantico {
                 pilaEstados.push(nuevoEstado);
 
             } else if (accion.equals("acc")) {
-                System.out.println("-----------------------------------------------------"
-                        + "-----------------------------------------------");
+                System.out.println("-----------------------------------------------------------------------"
+                        + "-----------------------------------------------------------------------");
                 System.out.println("ACEPTADA. Tipo final: " + tipoDeValor(pilaSem.peek()));
+                generarArchivos();
                 return;
+
             } else {
-                // Aquï¿½ es un GOTO (nï¿½mero puro)
+                // GOTO
                 try {
                     int nuevoEstado = Integer.parseInt(accion);
                     pilaEstados.push(nuevoEstado);
@@ -378,17 +599,66 @@ public class AnalizadorSemantico {
                 }
             }
 
-                imprimirFila(String.valueOf(paso), entradaPendiente(entrada, i),
-                    descripcion, pilaEstados.toString(), pilaSemanticaComoTexto());
+            imprimirFila(String.valueOf(paso), entradaPendiente(entrada, i),
+                    descripcion, pilaEstados.toString(),
+                    pilaSemanticaComoTexto(), pilaEnsambladoraComoTexto());
             paso++;
         }
+    }
+
+    // ---------------------------------------------------------------
+    // Salida: código intermedio (triplos) y ensamblador
+    // ---------------------------------------------------------------
+    private void generarArchivos() throws IOException {
+        // --- Código intermedio (triplos) ---
+        File fIntermedio = new File("codigo_intermedio.txt");
+        try (BufferedWriter w = new BufferedWriter(new FileWriter(fIntermedio))) {
+            w.write("; Codigo intermedio (triplos) - FastDon");
+            w.newLine();
+            w.write(String.format("%-6s %-6s %-12s %-12s %-12s%n",
+                    "Nro", "Op", "Op1", "Op2", "Resultado"));
+            w.newLine();
+            int n = 1;
+            for (String[] t : triplos) {
+                w.write(String.format("%-6d %-6s %-12s %-12s %-12s%n",
+                        n++, t[0], t[1], t[2], t[3]));
+            }
+            w.newLine();
+            w.write("; Temporales generados: " + contadorTemporales);
+            w.newLine();
+        }
+        System.out.println("Codigo intermedio generado en: " + fIntermedio.getAbsolutePath());
+        System.out.println("--- Triplos ---");
+        int n = 1;
+        for (String[] t : triplos) {
+            System.out.printf("  (%d) %s = %s %s %s%n", n++, t[3], t[1], t[0], t[2]);
+        }
+
+        // --- Código ensamblador ---
+        escribirEnsamblador(codigoEnsamblador);
+    }
+
+    private void escribirEnsamblador(List<String> instrucciones) throws IOException {
+        File archivo = new File("codigo_ensamblador.asm");
+        try (BufferedWriter escritor = new BufferedWriter(new FileWriter(archivo))) {
+            escritor.write("; Codigo ensamblador generado desde triplos - FastDon");
+            escritor.newLine();
+            escritor.write("; Temporales: " + contadorTemporales);
+            escritor.newLine();
+            for (String instruccion : instrucciones) {
+                escritor.write(instruccion);
+                escritor.newLine();
+            }
+            escritor.write("HALT");
+            escritor.newLine();
+        }
+        System.out.println("Codigo ensamblador generado en: " + archivo.getAbsolutePath());
     }
 
     public void mostrarTabla() {
         for (Map.Entry<Integer, Map<String, String>> fila : tabla.entrySet()) {
             int estado = fila.getKey();
             Map<String, String> acciones = fila.getValue();
-
             System.out.print("Estado " + estado + ": ");
             for (Map.Entry<String, String> celda : acciones.entrySet()) {
                 System.out.print(celda.getKey() + "=" + celda.getValue() + " | ");
@@ -397,26 +667,36 @@ public class AnalizadorSemantico {
         }
     }
 
+    // ---------------------------------------------------------------
+    // Main
+    // ---------------------------------------------------------------
     public static void main(String[] args) throws IOException {
         reservadas.add(new TABSIM("int", "reservada", "0", "idx", 0));
         reservadas.add(new TABSIM("String", "reservada", "0", "idx", 1));
         reservadas.add(new TABSIM("boolean", "reservada", "0", "idx", 2));
         AnalizadorSemantico parser = new AnalizadorSemantico();
 
-        // Registrar variables
         parser.registrarVariable("x", "int");
         parser.registrarVariable("y", "int");
         parser.registrarVariable("z", "boolean");
         parser.registrarVariable("s", "string");
+        parser.registrarVariable("a", "int");
+        parser.registrarVariable("b", "int");
+        parser.registrarVariable("c", "int");
+        parser.registrarVariable("d", "int");
+        parser.registrarVariable("e", "int");
+        parser.registrarVariable("f", "int");
+        parser.registrarVariable("g", "int");
+        parser.registrarVariable("h", "int");
+        parser.registrarVariable("i", "int");
+        parser.registrarVariable("j", "int");
+        parser.registrarVariable("texto", "string");
 
-        // Definir sï¿½mbolos de la tabla (orden de columnas en tu CSV)
         List<String> simbolos = Arrays.asList("Estado", "||", "&&", "==", "!=",
                 ">", "<", ">=", "<=", "+", "-", "*", "/", "%", "**", "!",
                 "(", ")", "id", "$", "A'", "A", "B", "R", "C", "D", "E", "F");
 
-        // Cargar tabla desde archivo CSV
         parser.cargarTabla("src/AnalizadorLexico/GFastDon.csv", simbolos);
-        //parser.mostrarTabla();
 
         System.out.print("Ingrese una expresion (ejemplo: (x + 3) > 2): ");
         String expresion = sc.nextLine();
@@ -431,10 +711,4 @@ public class AnalizadorSemantico {
             System.out.println("Error de entrada: " + error.getMessage());
         }
     }
-
-    /*public static void LeerEjercicio(){
-        System.out.println("Ingerese el ejercio a evaluar:");
-        String Ejer = sc.nextLine();
-    } 
-     */
 }
