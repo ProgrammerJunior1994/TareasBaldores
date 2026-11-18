@@ -1,0 +1,426 @@
+; ============================================================
+;  FastDon -> Ensamblador
+;  Tipos de datos, operadores y estructuras del lenguaje
+; ============================================================
+;  Tipos:
+;    int      -> 64 bits, ADD/SUB/MUL/DIV/MOD/POW
+;    boolean  -> 0/1, EQ/NE/GT/LT/GE/LE/AND/OR/NOT
+;    string   -> literal referenciado, LOAD "txt" / WRITE
+;
+;  Estructuras:
+;    declaracion simple      int a = expr;
+;    entrada / salida        leer(x); imprimir(expr);
+;    decision simple         si (cond) {A} sino {B}
+;    ciclo mientras          mientras (cond) {cuerpo}
+;    ciclo for               for (init; cond; incr) {cuerpo}
+; ============================================================
+
+
+; ============================================================
+; 1. TIPOS DE DATOS
+; ============================================================
+
+; ---------- int ----------
+; int a = 4;
+LOAD 4
+STORE a
+
+; int b = 6;
+LOAD 6
+STORE b
+
+; int c = 2;
+LOAD 2
+STORE c
+
+; ---------- boolean ----------
+; boolean z = true;
+LOAD 1
+STORE z
+
+; boolean w = false;
+LOAD 0
+STORE w
+
+; ---------- string ----------
+; string texto = "hola";
+LOAD "hola"
+STORE texto
+
+; string vacio = "";
+LOAD ""
+STORE vacio
+
+
+; ============================================================
+; 2. EXPRESIONES POR TIPO
+; ============================================================
+
+; ---------- Aritmeticas (int) ----------
+; a + b
+LOAD a
+ADD b
+STORE t1
+
+; a - b
+LOAD a
+SUB b
+STORE t2
+
+; a * b
+LOAD a
+MUL b
+STORE t3
+
+; a / b
+LOAD a
+DIV b
+STORE t4
+
+; a % b
+LOAD a
+MOD b
+STORE t5
+
+; a ** b
+LOAD a
+POW b
+STORE t6
+
+; ---------- Relacionales (int -> boolean) ----------
+; a == b
+LOAD a
+EQ b
+STORE r1
+
+; a != b
+LOAD a
+NE b
+STORE r2
+
+; a > b
+LOAD a
+GT b
+STORE r3
+
+; a < b
+LOAD a
+LT b
+STORE r4
+
+; a >= b
+LOAD a
+GE b
+STORE r5
+
+; a <= b
+LOAD a
+LE b
+STORE r6
+
+; ---------- Logicas (boolean -> boolean) ----------
+; z && w
+LOAD z
+AND w
+STORE l1
+
+; z || w
+LOAD z
+OR w
+STORE l2
+
+; !z
+LOAD z
+NOT
+STORE l3
+
+
+; ============================================================
+; 3. DECLARACION SIMPLE
+; ============================================================
+
+; ---------- int a = a + b * c; ----------
+; (a + (b * c))
+LOAD b
+MUL c
+STORE td1
+LOAD a
+ADD td1
+STORE td2
+LOAD td2
+STORE a
+
+; ---------- boolean z = a > b && c != 0; ----------
+LOAD a
+GT b
+STORE tb1
+
+LOAD c
+NE 0
+STORE tb2
+
+LOAD tb1
+AND tb2
+STORE tb3
+LOAD tb3
+STORE z
+
+; ---------- string texto = "hola"; ----------
+LOAD "hola"
+STORE texto
+
+
+; ============================================================
+; 4. ENTRADA / SALIDA
+; ============================================================
+
+; ---------- leer(x); ----------
+READ x
+
+; ---------- leer(y); ----------
+READ y
+
+; ---------- imprimir(x + 1); ----------
+LOAD x
+ADD 1
+STORE te1
+LOAD te1
+WRITE
+
+; ---------- imprimir(z); ----------
+LOAD z
+WRITE
+
+; ---------- imprimir("fin"); ----------
+LOAD "fin"
+WRITE
+
+
+; ============================================================
+; 5. DECISION SIMPLE (si / sino)
+; ============================================================
+; si ( (a + b) > c && (a * c) < (b - c) || x >= 10 ) {
+;     imprimir(a + b * c);
+; } sino {
+;     imprimir("no cumple");
+; }
+
+; --- condicion: (a + b) > c ---
+LOAD a
+ADD b
+STORE t1
+LOAD t1
+GT c
+STORE t2
+
+; --- condicion: (a * c) < (b - c) ---
+LOAD a
+MUL c
+STORE t3
+LOAD b
+SUB c
+STORE t4
+LOAD t3
+LT t4
+STORE t5
+
+; --- condicion: t2 && t5 ---
+LOAD t2
+AND t5
+STORE t6
+
+; --- condicion: x >= 10 ---
+LOAD x
+GE 10
+STORE t7
+
+; --- condicion: t6 || t7 ---
+LOAD t6
+OR t7
+STORE t8
+
+; --- si (t8) ---
+LOAD t8
+JZ L1
+L1_SI:
+; imprimir(a + b * c)
+LOAD b
+MUL c
+STORE t9
+LOAD a
+ADD t9
+STORE t10
+LOAD t10
+WRITE
+JMP L2
+L1:
+; imprimir("no cumple")
+LOAD "no cumple"
+WRITE
+L2:
+
+
+; ============================================================
+; 6. CICLO MIENTRAS
+; ============================================================
+; mientras ( (i * 2) <= 10 && (s + i) < 100 || i != 6 ) {
+;     s = (s + i * 3) - 1;
+;     i = i + 1;
+; }
+
+; int i = 1;
+LOAD 1
+STORE i
+
+; int s = 0;
+LOAD 0
+STORE s
+
+L3:
+; --- condicion: (i * 2) <= 10 ---
+LOAD i
+MUL 2
+STORE w1
+LOAD w1
+LE 10
+STORE w2
+
+; --- condicion: (s + i) < 100 ---
+LOAD s
+ADD i
+STORE w3
+LOAD w3
+LT 100
+STORE w4
+
+; --- condicion: w2 && w4 ---
+LOAD w2
+AND w4
+STORE w5
+
+; --- condicion: i != 6 ---
+LOAD i
+NE 6
+STORE w6
+
+; --- condicion: w5 || w6 ---
+LOAD w5
+OR w6
+STORE w7
+
+; --- mientras (w7) ---
+LOAD w7
+JZ L4
+
+; --- s = (s + i * 3) - 1 ---
+LOAD i
+MUL 3
+STORE w8
+LOAD s
+ADD w8
+STORE w9
+LOAD w9
+SUB 1
+STORE w10
+LOAD w10
+STORE s
+
+; --- i = i + 1 ---
+LOAD i
+ADD 1
+STORE w11
+LOAD w11
+STORE i
+
+JMP L3
+L4:
+
+
+; ============================================================
+; 7. CICLO FOR
+; ============================================================
+; for (int n = 3; (n * 2) >= 4 && (acc + n) < 50 || n != 0; n = n - 1) {
+;     acc = (acc * 2) + (n - 1);
+; }
+
+; int acc = 1;
+LOAD 1
+STORE acc
+
+; --- init: int n = 3 ---
+LOAD 3
+STORE n
+
+L5:
+; --- condicion: (n * 2) >= 4 ---
+LOAD n
+MUL 2
+STORE f1
+LOAD f1
+GE 4
+STORE f2
+
+; --- condicion: (acc + n) < 50 ---
+LOAD acc
+ADD n
+STORE f3
+LOAD f3
+LT 50
+STORE f4
+
+; --- condicion: f2 && f4 ---
+LOAD f2
+AND f4
+STORE f5
+
+; --- condicion: n != 0 ---
+LOAD n
+NE 0
+STORE f6
+
+; --- condicion: f5 || f6 ---
+LOAD f5
+OR f6
+STORE f7
+
+; --- for (f7) ---
+LOAD f7
+JZ L6
+
+; --- acc = (acc * 2) + (n - 1) ---
+LOAD acc
+MUL 2
+STORE f8
+LOAD n
+SUB 1
+STORE f9
+LOAD f8
+ADD f9
+STORE f10
+LOAD f10
+STORE acc
+
+; --- incremento: n = n - 1 ---
+LOAD n
+SUB 1
+STORE f11
+LOAD f11
+STORE n
+
+JMP L5
+L6:
+
+
+; ============================================================
+; 8. IMPRESION FINAL
+; ============================================================
+; imprimir(acc);
+LOAD acc
+WRITE
+
+HALT
+
+
+; ============================================================
+;  FIN DEL PROGRAMA
+; ============================================================

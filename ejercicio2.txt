@@ -1,0 +1,14 @@
+main(){
+ 
+ boolean jaime = true;
+ boolean amelie = false;
+
+ if(jaime == true && amelie == true){
+  print("Son felices por siempre");
+ }
+
+ if(jaime == true && amelie != true){
+  print("Separados para siempre");
+ }
+
+}

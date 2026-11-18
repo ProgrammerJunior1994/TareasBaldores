@@ -1,7 +1,8 @@
 ; Codigo intermedio (triplos) - FastDon
 Nro    Op     Op1          Op2          Resultado   
 
-1      +      +            id17         t1          
-2      >      >            id18         t2          
+1      *      *            id17         t1          
+2      +      id6          t1           t2          
+3      +      +            id18         t3          
 
-; Temporales generados: 2
+; Temporales generados: 3

@@ -1,0 +1,115 @@
+main ( ) {
+    int edad ;
+    int calificacion ;
+    int cantidad ;
+    int suma = 0 ;
+    int promedio ;
+    int aprobados = 0 ;
+    int reprobados = 0 ;
+    int opcion ;
+    int contador = 0 ;
+    int numero ;
+    int pares = 0 ;
+    int impares = 0 ;
+
+    boolean inscrito = true ;
+    boolean asistencia ;
+    boolean acceso = false ;
+
+    String nombre ;
+    String escuela = " TSJ " ;
+    String carrera = " Sistemas " ;
+    String grupo ;
+
+    inputS ( nombre ) ;
+    inputI ( edad ) ;
+    inputB ( asistencia ) ;
+    inputI ( cantidad ) ;
+
+    if ( edad >= 18 && asistencia == true ) {
+        acceso = true ;
+        print ( " Alumno autorizado " ) ;
+    }
+    else {
+        print ( " Alumno no autorizado " ) ;
+    }
+
+    for ( int i = 0 ; i < cantidad ; i ++ ) {
+        inputI ( calificacion ) ;
+
+        suma = suma + calificacion ;
+
+        if ( calificacion >= 70 ) {
+            aprobados = aprobados + 1 ;
+        }
+        else {
+            reprobados = reprobados + 1 ;
+        }
+
+        if ( calificacion >= 90 ) {
+            print ( " Excelente calificacion " ) ;
+        }
+        else {
+            if ( calificacion >= 70 ) {
+                print ( " Alumno aprobado " ) ;
+            }
+            else {
+                print ( " Alumno reprobado " ) ;
+            }
+        }
+    }
+
+    promedio = suma / cantidad ;
+
+    int opcion ;
+    inputI ( opcion ) ;
+
+    switch ( opcion ) {
+        case 1 :
+            print ( " Consultar promedio " ) ;
+            print ( promedio ) ;
+            break ;
+
+        case 2 :
+            print ( " Consultar aprobados " ) ;
+            print ( aprobados ) ;
+            break ;
+
+        case 3 :
+            print ( " Consultar reprobados " ) ;
+            print ( reprobados ) ;
+            break ;
+
+        default :
+            print ( " Opcion no valida " ) ;
+            break ;
+    }
+
+    inputI ( numero ) ;
+
+    while ( numero != 0 ) {
+        if ( numero % 2 == 0 ) {
+            pares = pares + 1 ;
+        }
+        else {
+            impares = impares + 1 ;
+        }
+
+        inputI ( numero ) ;
+    }
+
+    for ( int j = 0 ; j < 5 ; j ++ ) {
+        contador = contador + 1 ;
+        print ( contador ) ;
+    }
+
+    print ( " Nombre del alumno: " ++ nombre ) ;
+    print ( " Escuela: " ++ escuela ) ;
+    print ( " Carrera: " ++ carrera ) ;
+    print ( " Edad: " ++ edad ) ;
+    print ( " Promedio: " ++ promedio ) ;
+    print ( " Total de aprobados: " ++ aprobados ) ;
+    print ( " Total de reprobados: " ++ reprobados ) ;
+    print ( " Numeros pares: " ++ pares ) ;
+    print ( " Numeros impares: " ++ impares ) ;
+}

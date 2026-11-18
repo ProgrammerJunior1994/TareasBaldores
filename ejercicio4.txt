@@ -1,0 +1,53 @@
+main ( ) {
+    int producto ;
+    int cantidad = 10 ;
+    int vendidos = 0 ;
+    int opcion ;
+    int precio = 50 ;
+    int total = 0 ;
+
+    String nombre ;
+    String tienda = " Mi tienda " ;
+
+    boolean disponible = true ;
+
+    inputS ( nombre ) ;
+    inputI ( producto ) ;
+
+    if ( producto > 0 && disponible == true ) {
+        print ( " Producto disponible " ) ;
+    }
+    else {
+        print ( " Producto no disponible " ) ;
+    }
+
+    for ( int i = 0 ; i < producto ; i ++ ) {
+        vendidos = vendidos + 1 ;
+        total = total + precio ;
+    }
+
+    inputI ( opcion ) ;
+
+    switch ( opcion ) {
+        case 1 :
+            cantidad = cantidad - vendidos ;
+            break ;
+
+        case 2 :
+            cantidad = cantidad + vendidos ;
+            break ;
+
+        default :
+            print ( " Opcion incorrecta " ) ;
+            break ;
+    }
+
+    while ( cantidad > 0 ) {
+        cantidad = cantidad - 1 ;
+    }
+
+    print ( " Producto: " ++ nombre ) ;
+    print ( " Vendidos: " ++ vendidos ) ;
+    print ( " Total: " ++ total ) ;
+    print ( " Inventario: " ++ cantidad ) ;
+}

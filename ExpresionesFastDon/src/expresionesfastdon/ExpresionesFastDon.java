@@ -21,6 +21,7 @@ public class ExpresionesFastDon {
                 System.out.println("3. Validar Estructuras de Repeticion.");
                 System.out.println("4. Validar función principal.");
                 System.out.println("5. Validar estructuras de E/S.");
+                System.out.println("6. Compilar programa FastDon a ensamblador 8086.");
                 System.out.println("Presiona 0 para salir del programa.");
                 opcExpre = sc.nextInt();
             } catch (InputMismatchException e) {
@@ -300,6 +301,32 @@ public class ExpresionesFastDon {
                             error = true;
 
                             break;
+                    }
+                    break;
+                case 6:
+                    try {
+                        java.nio.file.Path carpeta = java.nio.file.Paths.get("").toAbsolutePath();
+                        while (carpeta != null && !java.nio.file.Files.exists(carpeta.resolve("ejercicio1.txt"))) {
+                            carpeta = carpeta.getParent();
+                        }
+                        if (carpeta == null) {
+                            throw new java.io.IOException("No se encontró la carpeta raíz con los archivos ejercicio1.txt a ejercicio4.txt.");
+                        }
+
+                        AnalizadorLexico.GeneradorEnsamblador generador = new AnalizadorLexico.GeneradorEnsamblador();
+                        for (int i = 1; i <= 4; i++) {
+                            java.nio.file.Path entrada = carpeta.resolve("ejercicio" + i + ".txt");
+                            java.nio.file.Path salida = carpeta.resolve("ejercicio" + i + ".asm");
+                            if (!java.nio.file.Files.exists(entrada)) {
+                                throw new java.io.IOException("No se encontró el archivo: " + entrada.getFileName());
+                            }
+                            String fuente = java.nio.file.Files.readString(entrada);
+                            generador.generar(fuente, salida.toString());
+                            System.out.println("Generado: " + salida.getFileName());
+                        }
+                        System.out.println("Los cuatro ejercicios se compilaron correctamente.");
+                    } catch (Exception e) {
+                        System.out.println("No se pudieron compilar los ejercicios: " + e.getMessage());
                     }
                     break;
                 case 0:

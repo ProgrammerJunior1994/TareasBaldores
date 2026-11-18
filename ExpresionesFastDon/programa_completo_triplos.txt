@@ -1,0 +1,23 @@
+; Codigo intermedio (triplos) - FastDon
+Nro    Op         Op1          Op2          Resultado   
+
+1      =          4            -            a           
+2      =          6            -            b           
+3      =          2            -            c           
+4      READ       -            -            x           
+5      IF_FALSE   t8           -            L1          
+6      GOTO       -            -            L2          
+7      =          1            -            i           
+8      =          0            -            s           
+9      IF_FALSE   t7           -            L4          
+10     GOTO       -            -            L3          
+11     READ       -            -            a           
+12     READ       -            -            b           
+13     READ       -            -            c           
+14     IF_FALSE   t9           -            L5          
+15     GOTO       -            -            L6          
+16     =          3            -            n           
+17     =          1            -            acc         
+18     IF_FALSE   t7           -            L8          
+19     GOTO       -            -            L7          
+20     WRITE      -            -            acc         

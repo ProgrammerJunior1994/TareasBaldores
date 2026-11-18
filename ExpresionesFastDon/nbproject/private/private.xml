@@ -12,9 +12,12 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/roman.BRANDON.000/Desktop/7to%20Semestre/Lenguajes%20y%20Autómatas%202/TareasBaldores/ExpresionesFastDon/src/AnalizadorLexico/AnalizadorSemantico.java</file>
-            <file>file:/C:/Users/roman.BRANDON.000/Desktop/7to%20Semestre/Lenguajes%20y%20Autómatas%202/TareasBaldores/ExpresionesFastDon/src/AnalizadorLexico/analizadorPartTwo.java</file>
-            <file>file:/C:/Users/roman.BRANDON.000/Desktop/7to%20Semestre/Lenguajes%20y%20Autómatas%202/TareasBaldores/ExpresionesFastDon/src/AnalizadorLexico/Produccion.java</file>
+            <file>file:/C:/Users/roman.BRANDON.000/Desktop/7to%20Semestre/Lenguajes%20y%20Autómatas%202/TareasBaldoresEn/ExpresionesFastDon/src/AnalizadorLexico/AnalizadorSemantico.java</file>
+            <file>file:/C:/Users/roman.BRANDON.000/Desktop/7to%20Semestre/Lenguajes%20y%20Autómatas%202/TareasBaldoresEn/ExpresionesFastDon/src/AnalizadorLexico/GFastDon.csv</file>
+            <file>file:/C:/Users/roman.BRANDON.000/Desktop/7to%20Semestre/Lenguajes%20y%20Autómatas%202/TareasBaldoresEn/ExpresionesFastDon/src/AnalizadorLexico/Produccion.java</file>
+            <file>file:/C:/Users/roman.BRANDON.000/Desktop/7to%20Semestre/Lenguajes%20y%20Autómatas%202/TareasBaldoresEn/ExpresionesFastDon/src/AnalizadorLexico/GeneradorEnsamblador.java</file>
+            <file>file:/C:/Users/roman.BRANDON.000/Desktop/7to%20Semestre/Lenguajes%20y%20Autómatas%202/TareasBaldoresEn/ExpresionesFastDon/src/AnalizadorLexico/codigoEnsamblador.asm.txt</file>
+            <file>file:/C:/Users/roman.BRANDON.000/Desktop/7to%20Semestre/Lenguajes%20y%20Autómatas%202/TareasBaldoresEn/ExpresionesFastDon/src/AnalizadorLexico/Compilador8086.java</file>
         </group>
     </open-files>
 </project-private>
